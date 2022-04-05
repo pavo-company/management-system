@@ -6,7 +6,8 @@ namespace management_system
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            User user = new User("John", "john@gmail.com");
+            Console.WriteLine(user);
         }
     }
 }
