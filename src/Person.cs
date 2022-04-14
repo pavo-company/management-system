@@ -4,6 +4,7 @@
     {
         protected int Id { get; set; }
         protected string Name { get; set; }
+        protected string Surname { get; set; }
         protected string Email { get; set; }
         public override string ToString()
         {
