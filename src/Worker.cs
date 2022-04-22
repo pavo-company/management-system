@@ -29,14 +29,15 @@ namespace management_system
 
             SQLiteCommand command = new SQLiteCommand(query, db.Connection);
             db.Connection.Open();
+            
             command.Parameters.AddWithValue("@id", Id);
             command.Parameters.AddWithValue("@name", Name);
             command.Parameters.AddWithValue("@surname", Surname);
             command.Parameters.AddWithValue("@salary", Salary);
             command.Parameters.AddWithValue("@email", Email);
-            var result = command.ExecuteNonQuery();
+            
+            command.ExecuteNonQuery();
             db.Connection.Close();
-            Console.WriteLine(result);
         }
     }
 }

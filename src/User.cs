@@ -22,17 +22,19 @@ namespace management_system
 
         public void AddToDatabase(Database db)
         {
-            string query = "INSERT INTO users ('id', 'name', 'surname', 'email') VALUES (@id, @name, @surname, @email)";
+            string query = 
+                "INSERT INTO users ('id', 'name', 'surname', 'email') VALUES (@id, @name, @surname, @email)";
 
             SQLiteCommand command = new SQLiteCommand(query, db.Connection);
             db.Connection.Open();
+            
             command.Parameters.AddWithValue("@id", Id);
             command.Parameters.AddWithValue("@name", Name);
             command.Parameters.AddWithValue("@surname", Surname);
             command.Parameters.AddWithValue("@email", Email);
-            var result = command.ExecuteNonQuery();
+            
+            command.ExecuteNonQuery();
             db.Connection.Close();
-            Console.WriteLine(result);
         }
     }
 }
