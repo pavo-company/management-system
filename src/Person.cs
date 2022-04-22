@@ -9,5 +9,6 @@ namespace management_system
         protected string Name { get; init; }
         protected string Surname { get; init; }
         protected string Email { get; init; }
+        
     }
 }
