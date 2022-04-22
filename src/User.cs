@@ -5,7 +5,6 @@ namespace management_system
 {
     public class User : Person
     {
-        
         private static int _instanceId;
          
         public User(string name, string surname, string email)
@@ -23,10 +22,11 @@ namespace management_system
 
         public void AddToDatabase(Database db)
         {
-            string query = $"INSERT INTO users ('name', 'surname', 'email') VALUES (@name, @surname, @email)";
+            string query = "INSERT INTO users ('id', 'name', 'surname', 'email') VALUES (@id, @name, @surname, @email)";
 
             SQLiteCommand command = new SQLiteCommand(query, db.Connection);
             db.Connection.Open();
+            command.Parameters.AddWithValue("@id", Id);
             command.Parameters.AddWithValue("@name", Name);
             command.Parameters.AddWithValue("@surname", Surname);
             command.Parameters.AddWithValue("@email", Email);

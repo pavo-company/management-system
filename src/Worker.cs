@@ -1,13 +1,17 @@
-﻿namespace management_system
+﻿using System;
+using System.Data.SQLite;
+
+namespace management_system
 {
     public class Worker : Person
     {
         private static int _instanceId;
-        private int Salary { get; set; }
+        private int Salary { get; init; }
          
-        public Worker(string name, string email, int salary)
+        public Worker(string name, string surname, string email, int salary)
         {
             Name = name;
+            Surname = surname;
             Email = email;
             Salary = salary;
             Id = _instanceId;
@@ -16,7 +20,23 @@
         
         public override string ToString()
         {
-            return string.Format("User:\n\tName: {0}\n\tEmail: {1}\n\tId: {2}", Name, Email, Id);
+            return $"Id: {Id}\tName: {Name}Surname: {Surname}\tEmail: {Email}\tSalary: {Salary}";
+        }
+        
+        public void AddToDatabase(Database db)
+        {
+            string query = "INSERT INTO workers ('id', 'name', 'surname', 'salary', 'email') VALUES (@id, @name, @surname, @salary, @email)";
+
+            SQLiteCommand command = new SQLiteCommand(query, db.Connection);
+            db.Connection.Open();
+            command.Parameters.AddWithValue("@id", Id);
+            command.Parameters.AddWithValue("@name", Name);
+            command.Parameters.AddWithValue("@surname", Surname);
+            command.Parameters.AddWithValue("@salary", Salary);
+            command.Parameters.AddWithValue("@email", Email);
+            var result = command.ExecuteNonQuery();
+            db.Connection.Close();
+            Console.WriteLine(result);
         }
     }
 }
