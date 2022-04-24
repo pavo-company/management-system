@@ -1,6 +1,1 @@
-.idea/
-bin/
-management-system.csproj
-management-system.sln
-obj/
 database.sqlite
