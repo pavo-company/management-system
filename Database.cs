@@ -89,5 +89,20 @@ namespace management_system
             Connection.Close();
             return counter;
         }
+
+        public void SearchItem(string template)
+        {
+            string getUsersDataQuery = 
+                $"SELECT name, amount FROM items WHERE name LIKE '%{template}%'";
+            SQLiteCommand command = new SQLiteCommand(getUsersDataQuery, Connection);
+            
+            Connection.Open();
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Console.WriteLine($"{reader[0]}\t{reader[1]}");
+            }
+            Connection.Close();
+        }
     }
 }
