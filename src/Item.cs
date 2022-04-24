@@ -5,8 +5,7 @@ namespace management_system
 {
     public class Item
     {
-        private static int _instanceId;
-        private int Id { get; init; }
+        private long Id { get; init; }
         private string Name { get; init; }
         private int Amount { get; set; }
 
@@ -14,17 +13,15 @@ namespace management_system
 
         public Item(string name, int amount, int minAmount)
         {
-            Id = _instanceId;
             Name = name;
             Amount = amount;
             MinAmount = minAmount;
-            _instanceId++;
         }
 
         public void AddToDatabase(Database db)
         {
             string query = 
-                "INSERT INTO items ('id', 'name', 'amount', 'min_amount') VALUES (@id, @name, @amount, @min)";
+                "INSERT INTO items ('name', 'amount', 'min_amount') VALUES (@name, @amount, @min)";
             string getAllNames = "SELECT name FROM items";
             
             SQLiteCommand allNamesCommand = new SQLiteCommand(getAllNames, db.Connection);
@@ -38,11 +35,9 @@ namespace management_system
                     throw new Exception("You have element of that name in your database");
             }
 
-            command.Parameters.AddWithValue("@id", Id);
             command.Parameters.AddWithValue("@name", Name);
             command.Parameters.AddWithValue("@amount", Amount);
             command.Parameters.AddWithValue("@min", MinAmount);
-            
             command.ExecuteNonQuery();
             db.Connection.Close();
         }

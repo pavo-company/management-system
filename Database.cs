@@ -16,10 +16,10 @@ namespace management_system
             {
                 SQLiteConnection.CreateFile(DatabasePath);
             }
-            string createUserTable = "create table users (id PRIMARY KEY, name TEXT, surname TEXT, email TEXT);";
+            string createUserTable = "create table users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, email TEXT);";
             string createWorkersTable =
-                "create table workers (id PRIMARY KEY, name TEXT, surname TEXT, salary INTEGER, email TEXT);";
-            string createItemsTable = "create table items (id PRIMARY KEY, name TEXT, amount INTEGER, min_amount INTEGER);";
+                "create table workers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, salary INTEGER, email TEXT);";
+            string createItemsTable = "create table items (id INTEGER PRIMARY KEY AUTOINCREMENT,  name TEXT, amount INTEGER, min_amount INTEGER);";
             Connection = new SQLiteConnection($"Data Source={DatabasePath}");
             string getTablesQuery =
                 "SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';";
@@ -90,11 +90,11 @@ namespace management_system
             return counter;
         }
 
-        public void SearchItem(string template)
+        public void Search(string template, string table)
         {
-            string getUsersDataQuery = 
-                $"SELECT name, amount FROM items WHERE name LIKE '%{template}%'";
-            SQLiteCommand command = new SQLiteCommand(getUsersDataQuery, Connection);
+            string query = 
+                $"SELECT name, amount FROM {table} WHERE name LIKE '%{template}%'";
+            SQLiteCommand command = new SQLiteCommand(query, Connection);
             
             Connection.Open();
             SQLiteDataReader reader = command.ExecuteReader();

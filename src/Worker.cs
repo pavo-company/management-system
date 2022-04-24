@@ -5,7 +5,6 @@ namespace management_system
 {
     public class Worker : Person
     {
-        private static int _instanceId;
         private int Salary { get; init; }
          
         public Worker(string name, string surname, string email, int salary)
@@ -14,8 +13,6 @@ namespace management_system
             Surname = surname;
             Email = email;
             Salary = salary;
-            Id = _instanceId;
-            _instanceId++;
         }
         
         public override string ToString()
@@ -25,12 +22,11 @@ namespace management_system
         
         public void AddToDatabase(Database db)
         {
-            string query = "INSERT INTO workers ('id', 'name', 'surname', 'salary', 'email') VALUES (@id, @name, @surname, @salary, @email)";
+            string query = "INSERT INTO workers ('name', 'surname', 'salary', 'email') VALUES (@name, @surname, @salary, @email)";
 
             SQLiteCommand command = new SQLiteCommand(query, db.Connection);
             db.Connection.Open();
             
-            command.Parameters.AddWithValue("@id", Id);
             command.Parameters.AddWithValue("@name", Name);
             command.Parameters.AddWithValue("@surname", Surname);
             command.Parameters.AddWithValue("@salary", Salary);
