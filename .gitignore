@@ -1,5 +1,7 @@
 database.sqlite
 backup.sqlite
-obj/
-bin/
 .idea/
+bin/
+management-system.csproj
+management-system.sln
+obj/
