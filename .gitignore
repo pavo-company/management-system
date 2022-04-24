@@ -1,1 +1,5 @@
 database.sqlite
+backup.sqlite
+obj/
+bin/
+.idea/
