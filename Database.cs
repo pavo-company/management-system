@@ -90,17 +90,24 @@ namespace management_system
             return counter;
         }
 
-        public void Search(string template, string table)
+        public void Search(string table, string[] columns, string template, string templateColumn)
         {
             string query = 
-                $"SELECT name, amount FROM {table} WHERE name LIKE '%{template}%'";
+                $"SELECT {String.Join(",", columns)} FROM {table} WHERE {templateColumn} LIKE '%{template}%'";
             SQLiteCommand command = new SQLiteCommand(query, Connection);
             
             Connection.Open();
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                Console.WriteLine($"{reader[0]}\t{reader[1]}");
+               for(int column = 0; column < reader.FieldCount; column++)
+               {
+                   Console.Write(reader[column]);
+                   if(column+1 < reader.FieldCount)
+                       Console.Write("\t");
+                   else
+                       Console.WriteLine();
+               }
             }
             Connection.Close();
         }
