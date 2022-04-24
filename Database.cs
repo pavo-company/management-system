@@ -8,48 +8,68 @@ namespace management_system
     public class Database
     {
         private const string DatabasePath = "../../../database.sqlite";
+        private const string BackupDatabasePath = "../../../backup.sqlite";
         public SQLiteConnection Connection;
+        public SQLiteConnection BackupConnection;
 
         public Database()
         {
-            if (!File.Exists(DatabasePath))
-            {
-                SQLiteConnection.CreateFile(DatabasePath);
-            }
-            string createUserTable = "create table users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, email TEXT);";
-            string createWorkersTable =
-                "create table workers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, salary INTEGER, email TEXT);";
-            string createItemsTable = "create table items (id INTEGER PRIMARY KEY AUTOINCREMENT,  name TEXT, amount INTEGER, min_amount INTEGER);";
-            Connection = new SQLiteConnection($"Data Source={DatabasePath}");
+            CreateDatabaseIfNotExists();
+            
             string getTablesQuery =
                 "SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';";
-            
+            Connection = new SQLiteConnection($"Data Source={DatabasePath}");
+            BackupConnection = new SQLiteConnection($"Data Source={BackupDatabasePath}");
+
             List<string> tables = new List<string>();
             SQLiteCommand getTables = new SQLiteCommand(getTablesQuery, Connection);
             
-            Connection.Open();
+            Open();
+            
             SQLiteDataReader reader = getTables.ExecuteReader();
             while (reader.Read())
                 tables.Add(Convert.ToString(reader["name"]));
                 
+            CreateTablesIfNotExists(tables, Connection);
+            CreateTablesIfNotExists(tables, BackupConnection);
+            
+            Close();
+        }
+
+        private void CreateTablesIfNotExists(List<string> tables, SQLiteConnection connection)
+        {
+            string createUserTable = 
+                "create table users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, email TEXT);";
+            string createWorkersTable =
+                "create table workers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, salary INTEGER, email TEXT);";
+            string createItemsTable = 
+                "create table items (id INTEGER PRIMARY KEY AUTOINCREMENT,  name TEXT, amount INTEGER, min_amount INTEGER);";
             if (!tables.Contains("users"))
             {
-                SQLiteCommand addUserTab = new SQLiteCommand(createUserTable, Connection);
+                SQLiteCommand addUserTab = new SQLiteCommand(createUserTable, connection);
                 addUserTab.ExecuteNonQuery();
             }
 
             if (!tables.Contains("workers"))
             {
-                SQLiteCommand addWorkersTab = new SQLiteCommand(createWorkersTable, Connection);
+                SQLiteCommand addWorkersTab = new SQLiteCommand(createWorkersTable, connection);
                 addWorkersTab.ExecuteNonQuery();
             }
-            
+
             if (!tables.Contains("items"))
             {
-                SQLiteCommand addItemsTab = new SQLiteCommand(createItemsTable, Connection);
+                SQLiteCommand addItemsTab = new SQLiteCommand(createItemsTable, connection);
                 addItemsTab.ExecuteNonQuery();
             }
-            Connection.Close();
+        }
+
+        private static void CreateDatabaseIfNotExists()
+        {
+            if (!File.Exists(DatabasePath))
+                SQLiteConnection.CreateFile(DatabasePath);
+            
+            if (!File.Exists(BackupDatabasePath))
+                SQLiteConnection.CreateFile(BackupDatabasePath);
         }
 
         public void PrintAllUsers()
@@ -110,6 +130,18 @@ namespace management_system
                }
             }
             Connection.Close();
+        }
+
+        public void Open()
+        {
+            Connection.Open();
+            BackupConnection.Open();
+        }
+
+        public void Close()
+        {
+            Connection.Close();
+            BackupConnection.Close();
         }
     }
 }

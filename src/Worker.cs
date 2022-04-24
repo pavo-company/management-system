@@ -17,23 +17,35 @@ namespace management_system
         
         public override string ToString()
         {
-            return $"Id: {Id}\tName: {Name}Surname: {Surname}\tEmail: {Email}\tSalary: {Salary}";
+            return $"Name: {Name}Surname: {Surname}\tEmail: {Email}\tSalary: {Salary}";
         }
         
         public void AddToDatabase(Database db)
         {
-            string query = "INSERT INTO workers ('name', 'surname', 'salary', 'email') VALUES (@name, @surname, @salary, @email)";
+            string query = 
+                "INSERT INTO workers ('name', 'surname', 'salary', 'email') VALUES (@name, @surname, @salary, @email)";
 
             SQLiteCommand command = new SQLiteCommand(query, db.Connection);
-            db.Connection.Open();
+            SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
+            
+            db.Open();
             
             command.Parameters.AddWithValue("@name", Name);
+            backupCommand.Parameters.AddWithValue("@name", Name);
+            
             command.Parameters.AddWithValue("@surname", Surname);
+            backupCommand.Parameters.AddWithValue("@surname", Surname);
+            
             command.Parameters.AddWithValue("@salary", Salary);
+            backupCommand.Parameters.AddWithValue("@salary", Salary);
+            
             command.Parameters.AddWithValue("@email", Email);
+            backupCommand.Parameters.AddWithValue("@email", Email);
             
             command.ExecuteNonQuery();
-            db.Connection.Close();
+            backupCommand.ExecuteNonQuery();
+            
+            db.Close();
         }
     }
 }

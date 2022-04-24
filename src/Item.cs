@@ -25,9 +25,11 @@ namespace management_system
             string getAllNames = "SELECT name FROM items";
             
             SQLiteCommand allNamesCommand = new SQLiteCommand(getAllNames, db.Connection);
-            SQLiteCommand command = new SQLiteCommand(query, db.Connection);
+            SQLiteCommand addCommand = new SQLiteCommand(query, db.Connection);
+            SQLiteCommand addBackupCommand = new SQLiteCommand(query, db.BackupConnection);
             
-            db.Connection.Open();
+            db.Open();
+            
             SQLiteDataReader namesReader = allNamesCommand.ExecuteReader();
             while (namesReader.Read())
             {
@@ -35,11 +37,19 @@ namespace management_system
                     throw new Exception("You have element of that name in your database");
             }
 
-            command.Parameters.AddWithValue("@name", Name);
-            command.Parameters.AddWithValue("@amount", Amount);
-            command.Parameters.AddWithValue("@min", MinAmount);
-            command.ExecuteNonQuery();
-            db.Connection.Close();
+            addCommand.Parameters.AddWithValue("@name", Name);
+            addBackupCommand.Parameters.AddWithValue("@name", Name);
+            
+            addCommand.Parameters.AddWithValue("@amount", Amount);
+            addBackupCommand.Parameters.AddWithValue("@amount", Amount);
+            
+            addCommand.Parameters.AddWithValue("@min", MinAmount);
+            addBackupCommand.Parameters.AddWithValue("@min", MinAmount);
+            
+            addCommand.ExecuteNonQuery();
+            addBackupCommand.ExecuteNonQuery();
+            
+            db.Close();
         }
 
         public void ReduceItem(string name, int amount, Database db)
