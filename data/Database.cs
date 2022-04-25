@@ -175,6 +175,18 @@ namespace management_system
             Connection.Close();
         }
 
+        public void RemoveByIndex(string table, int index)
+        {
+            string query = $"DELETE FROM {table} WHERE id = {index};";
+            SQLiteCommand command = new SQLiteCommand(query, Connection);
+            SQLiteCommand backupCommand = new SQLiteCommand(query, BackupConnection);
+            
+            Open();
+            command.ExecuteNonQuery();
+            backupCommand.ExecuteNonQuery();
+            Close();
+        }
+
         public void Open()
         {
             Connection.Open();
