@@ -20,7 +20,7 @@ namespace management_system
         public void AddToDatabase(Database db)
         {
             string query = 
-                "INSERT INTO users ('name', 'surname', 'email') VALUES (@name, @surname, @email)";
+                "INSERT INTO users ('name', 'surname', 'tin') VALUES (@name, @surname, @email)";
 
             SQLiteCommand command = new SQLiteCommand(query, db.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
@@ -33,8 +33,8 @@ namespace management_system
             command.Parameters.AddWithValue("@surname", Surname);
             backupCommand.Parameters.AddWithValue("@surname", Surname);
             
-            command.Parameters.AddWithValue("@email", Tin);
-            backupCommand.Parameters.AddWithValue("@email", Tin);
+            command.Parameters.AddWithValue("@tin", Tin);
+            backupCommand.Parameters.AddWithValue("@tin", Tin);
             
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();
