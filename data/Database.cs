@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using migrations;
 
 namespace management_system
 {
@@ -11,6 +12,7 @@ namespace management_system
         private const string BackupDatabasePath = "../../../data/backup.sqlite";
         public SQLiteConnection Connection;
         public SQLiteConnection BackupConnection;
+        private Migrations Migrations;
 
         public Database()
         {
@@ -32,6 +34,9 @@ namespace management_system
                 
             CreateTablesIfNotExists(tables, Connection);
             CreateTablesIfNotExists(tables, BackupConnection);
+            
+            Migrations = new Migrations(Connection, BackupConnection);
+            Migrations.MigrateAll();
             
             Close();
         }
@@ -104,6 +109,14 @@ namespace management_system
                     "FOREIGN KEY (worker_id) REFERENCES workers(id), FOREIGN KEY (item_id) REFERENCES items(id), FOREIGN KEY (user_id) REFERENCES users(id));";
                 SQLiteCommand addExtractionsTab = new SQLiteCommand(createExtractionsTable, connection);
                 addExtractionsTab.ExecuteNonQuery();
+            }
+            
+            if (!tables.Contains("migrations"))
+            {
+                string createMigrationsTable = 
+                    "create table migrations (id INTEGER PRIMARY KEY AUTOINCREMENT, version TEXT, deployed_at TEXT, info TEXT)";
+                SQLiteCommand addMigrationsTab = new SQLiteCommand(createMigrationsTable, connection);
+                addMigrationsTab.ExecuteNonQuery();
             }
         }
 
