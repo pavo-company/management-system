@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace management_system
 {
@@ -8,8 +9,8 @@ namespace management_system
         {
             Database db = new Database();
 
-            db.PrintAllUsers();
-            db.PrintAllWorkers();
+            
+
         }
     }
 }

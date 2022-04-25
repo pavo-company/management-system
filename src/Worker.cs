@@ -7,17 +7,17 @@ namespace management_system
     {
         private int Salary { get; init; }
          
-        public Worker(string name, string surname, string email, int salary)
+        public Worker(string name, string surname, string tin, int salary)
         {
             Name = name;
             Surname = surname;
-            Email = email;
+            Tin = tin;
             Salary = salary;
         }
         
         public override string ToString()
         {
-            return $"Name: {Name}Surname: {Surname}\tEmail: {Email}\tSalary: {Salary}";
+            return $"Name: {Name}Surname: {Surname}\tEmail: {Tin}\tSalary: {Salary}";
         }
         
         public void AddToDatabase(Database db)
@@ -39,8 +39,8 @@ namespace management_system
             command.Parameters.AddWithValue("@salary", Salary);
             backupCommand.Parameters.AddWithValue("@salary", Salary);
             
-            command.Parameters.AddWithValue("@email", Email);
-            backupCommand.Parameters.AddWithValue("@email", Email);
+            command.Parameters.AddWithValue("@email", Tin);
+            backupCommand.Parameters.AddWithValue("@email", Tin);
             
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();

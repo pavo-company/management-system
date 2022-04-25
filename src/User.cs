@@ -6,15 +6,15 @@ namespace management_system
     public class User : Person
     {
          
-        public User(string name, string surname, string email)
+        public User(string name, string surname, string tin)
         {
             Name = name;
-            Email = email;
+            Tin = tin;
             Surname = surname;
         }
         public override string ToString()
         {
-            return $"User:\n\tName: {Name}\n\tEmail: {Email}\n";
+            return $"User:\n\tName: {Name}\n\tEmail: {Tin}\n";
         }
 
         public void AddToDatabase(Database db)
@@ -33,8 +33,8 @@ namespace management_system
             command.Parameters.AddWithValue("@surname", Surname);
             backupCommand.Parameters.AddWithValue("@surname", Surname);
             
-            command.Parameters.AddWithValue("@email", Email);
-            backupCommand.Parameters.AddWithValue("@email", Email);
+            command.Parameters.AddWithValue("@email", Tin);
+            backupCommand.Parameters.AddWithValue("@email", Tin);
             
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();
