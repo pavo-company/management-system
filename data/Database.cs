@@ -88,7 +88,7 @@ namespace management_system
             if (!tables.Contains("orders"))
             {
                 string createOrdersTable = 
-                    "create table orders (id INTEGER PRIMARY KEY AUTOINCREMENT,  supplier_id TEXT, item_id INTEGER, amount INTEGER," + 
+                    "create table orders (id INTEGER PRIMARY KEY AUTOINCREMENT,  supplier_id TEXT, item_id INTEGER, amount INTEGER, date TEXT, is_cyclic NUMERIC(1)," + 
                     "FOREIGN KEY (supplier_id) REFERENCES suppliers(id), FOREIGN KEY (item_id) REFERENCES items(id));";
                 SQLiteCommand addOrdersTab = new SQLiteCommand(createOrdersTable, connection);
                 addOrdersTab.ExecuteNonQuery();
@@ -136,7 +136,7 @@ namespace management_system
         
         public void PrintAllWorkers()
         {
-            string getUsersDataQuery = "SELECT id, name, surname, email, salary FROM workers";
+            string getUsersDataQuery = "SELECT id, name, surname, tin, salary FROM workers";
             SQLiteCommand command = new SQLiteCommand(getUsersDataQuery, Connection);
             
             Connection.Open();
@@ -186,6 +186,18 @@ namespace management_system
                }
             }
             Connection.Close();
+        }
+
+        public void RemoveByIndex(string table, int index)
+        {
+            string query = $"DELETE FROM {table} WHERE id = {index};";
+            SQLiteCommand command = new SQLiteCommand(query, Connection);
+            SQLiteCommand backupCommand = new SQLiteCommand(query, BackupConnection);
+            
+            Open();
+            command.ExecuteNonQuery();
+            backupCommand.ExecuteNonQuery();
+            Close();
         }
 
         public void Open()

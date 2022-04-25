@@ -1,26 +1,19 @@
-﻿using System;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 
 namespace management_system
 {
-    public class User : Person
+    public class Supplier : Person
     {
-         
-        public User(string name, string surname, string tin)
+        public Supplier(string name, string tin)
         {
             Name = name;
             Tin = tin;
-            Surname = surname;
         }
-        public override string ToString()
-        {
-            return $"User:\n\tName: {Name}\n\tEmail: {Tin}\n";
-        }
-
+        
         public void AddToDatabase(Database db)
         {
             string query = 
-                "INSERT INTO users ('name', 'surname', 'tin') VALUES (@name, @surname, @email)";
+                "INSERT INTO suppliers ('name', 'tin') VALUES (@name, @tin)";
 
             SQLiteCommand command = new SQLiteCommand(query, db.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
@@ -29,9 +22,6 @@ namespace management_system
             
             command.Parameters.AddWithValue("@name", Name);
             backupCommand.Parameters.AddWithValue("@name", Name);
-            
-            command.Parameters.AddWithValue("@surname", Surname);
-            backupCommand.Parameters.AddWithValue("@surname", Surname);
             
             command.Parameters.AddWithValue("@tin", Tin);
             backupCommand.Parameters.AddWithValue("@tin", Tin);
