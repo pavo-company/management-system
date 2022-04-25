@@ -7,8 +7,8 @@ namespace management_system
 {
     public class Database
     {
-        private const string DatabasePath = "../../../database.sqlite";
-        private const string BackupDatabasePath = "../../../backup.sqlite";
+        private const string DatabasePath = "../../../data/database.sqlite";
+        private const string BackupDatabasePath = "../../../data/backup.sqlite";
         public SQLiteConnection Connection;
         public SQLiteConnection BackupConnection;
 
@@ -38,31 +38,38 @@ namespace management_system
 
         private void CreateTablesIfNotExists(List<string> tables, SQLiteConnection connection)
         {
-            string createUserTable = 
-                "create table users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, email TEXT);";
-            string createWorkersTable =
-                "create table workers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, salary INTEGER, email TEXT);";
-            string createItemsTable = 
-                "create table items (id INTEGER PRIMARY KEY AUTOINCREMENT,  name TEXT, amount INTEGER, min_amount INTEGER);";
             if (!tables.Contains("users"))
             {
+                string createUserTable = 
+                    "create table users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, email TEXT);";
                 SQLiteCommand addUserTab = new SQLiteCommand(createUserTable, connection);
                 addUserTab.ExecuteNonQuery();
             }
 
             if (!tables.Contains("workers"))
             {
+                string createWorkersTable =
+                    "create table workers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, surname TEXT, salary INTEGER, email TEXT);";
                 SQLiteCommand addWorkersTab = new SQLiteCommand(createWorkersTable, connection);
                 addWorkersTab.ExecuteNonQuery();
             }
 
             if (!tables.Contains("items"))
             {
+                string createItemsTable = 
+                    "create table items (id INTEGER PRIMARY KEY AUTOINCREMENT,  name TEXT, amount INTEGER, min_amount INTEGER);";
                 SQLiteCommand addItemsTab = new SQLiteCommand(createItemsTable, connection);
                 addItemsTab.ExecuteNonQuery();
             }
+            
+            if (!tables.Contains("tags"))
+            {
+                string createTagsTable = 
+                    "create table tags (id INTEGER PRIMARY KEY AUTOINCREMENT,  name TEXT, item_id INTEGER);";
+                SQLiteCommand addTagsTab = new SQLiteCommand(createTagsTable, connection);
+                addTagsTab.ExecuteNonQuery();
+            }
         }
-
         private static void CreateDatabaseIfNotExists()
         {
             if (!File.Exists(DatabasePath))
@@ -105,7 +112,15 @@ namespace management_system
             string query = $"SELECT COUNT(id) FROM {table}";
             SQLiteCommand command = new SQLiteCommand(query, Connection);
             Connection.Open();
-            int counter = Convert.ToInt32(command.ExecuteScalar());;
+            int counter;
+            try
+            {
+                counter = Convert.ToInt32(command.ExecuteScalar());
+            }
+            catch
+            {
+                return 0;
+            }
             Connection.Close();
             return counter;
         }

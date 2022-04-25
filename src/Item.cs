@@ -1,23 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Linq;
 
 namespace management_system
 {
     public class Item
     {
-        private long Id { get; init; }
         private string Name { get; init; }
         private int Amount { get; set; }
-
         private int MinAmount { get; set; }
+        private List<string> Tags { get; set; }
 
-        public Item(string name, int amount, int minAmount)
+        public Item(string name, int amount, int minAmount, List<string> tags)
         {
             Name = name;
             Amount = amount;
             MinAmount = minAmount;
+            Tags = tags;
         }
-
         public void AddToDatabase(Database db)
         {
             string query = 
@@ -50,8 +51,32 @@ namespace management_system
             addBackupCommand.ExecuteNonQuery();
             
             db.Close();
+            
+            AddTagsToDatabase(db, db.HowManyRecords("items"));
         }
 
+        private void AddTagsToDatabase(Database db, int index)
+        {
+            string query = 
+                "INSERT INTO tags (name, item_id) VALUES (@name, @item_id);";
+            SQLiteCommand command = new SQLiteCommand(query, db.Connection);
+            SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
+            
+            db.Open();
+            
+            foreach (string tag in Tags)
+            {
+                command.Parameters.AddWithValue("@name", tag);
+                backupCommand.Parameters.AddWithValue("@name", tag);
+
+                command.Parameters.AddWithValue("@item_id", index);
+                backupCommand.Parameters.AddWithValue("@item_id", index);
+
+                command.ExecuteNonQuery();
+                backupCommand.ExecuteNonQuery();
+            }
+            db.Close();
+        }
         public void ReduceItem(string name, int amount, Database db)
         {
             string query = $"SELECT amount FROM items WHERE name={name}";
@@ -70,6 +95,14 @@ namespace management_system
             
             updateCommand.ExecuteNonQuery();
             db.Connection.Close();
+        }
+        public void AddTag(string tag)
+        {
+            Tags.Add(tag);
+        }
+        public void RemoveTag(string tag)
+        {
+            Tags.Remove(tag);
         }
     }
 }
