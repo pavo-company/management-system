@@ -83,7 +83,7 @@ namespace management_system
             if (!tables.Contains("orders"))
             {
                 string createOrdersTable = 
-                    "create table orders (id INTEGER PRIMARY KEY AUTOINCREMENT,  supplier_id TEXT, item_id INTEGER, amount INTEGER," + 
+                    "create table orders (id INTEGER PRIMARY KEY AUTOINCREMENT,  supplier_id TEXT, item_id INTEGER, amount INTEGER, date TEXT," + 
                     "FOREIGN KEY (supplier_id) REFERENCES suppliers(id), FOREIGN KEY (item_id) REFERENCES items(id));";
                 SQLiteCommand addOrdersTab = new SQLiteCommand(createOrdersTable, connection);
                 addOrdersTab.ExecuteNonQuery();
@@ -123,7 +123,7 @@ namespace management_system
         
         public void PrintAllWorkers()
         {
-            string getUsersDataQuery = "SELECT id, name, surname, email, salary FROM workers";
+            string getUsersDataQuery = "SELECT id, name, surname, tin, salary FROM workers";
             SQLiteCommand command = new SQLiteCommand(getUsersDataQuery, Connection);
             
             Connection.Open();
