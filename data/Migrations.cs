@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using migration;
 
 namespace migrations
@@ -36,8 +37,7 @@ namespace migrations
                     $"SELECT * FROM migrations WHERE version LIKE '{Convert.ToString(t.Name)}';";
                 
                 SQLiteCommand command = new SQLiteCommand(getMigrationVersionQuery, Connection);
-                SQLiteCommand commandBackup = new SQLiteCommand(getMigrationVersionQuery, Connection);
-                
+                SQLiteCommand commandBackup = new SQLiteCommand(getMigrationVersionQuery, BackupConnection);
                 
                 SQLiteDataReader reader = command.ExecuteReader();
                 if(!reader.HasRows)
