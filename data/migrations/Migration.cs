@@ -18,7 +18,12 @@ namespace migration
             SQLiteCommand command = new SQLiteCommand(query,Connection);
             
             command.ExecuteNonQuery();
-            
+        }
+        
+        protected void ExecuteQuery(string query, SQLiteConnection connection)
+        {
+            SQLiteCommand command = new SQLiteCommand(query, connection);
+            command.ExecuteNonQuery();
         }
     }
 }
