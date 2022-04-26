@@ -24,6 +24,9 @@ namespace migrations
 
         public void MigrateAll()
         {
+            Connection.Open();
+            BackupConnection.Open();
+            
             var types = Assembly
                 .GetExecutingAssembly()
                 .GetTypes()
@@ -52,6 +55,134 @@ namespace migrations
                     instance.AddToDatabase(BackupConnection);
                 }
             }
+            
+            Connection.Close();
+            BackupConnection.Close();
+        }
+        
+        public void Migrate(string version)
+        {
+            Connection.Open();
+            BackupConnection.Open();
+            
+            try
+            {
+                var type = Assembly
+                    .GetExecutingAssembly()
+                    .GetType($"migration.version.{version}");
+                
+                Migration instance = (Migration) Activator.CreateInstance(type);
+
+                string getMigrationVersionQuery =
+                    $"SELECT * FROM migrations WHERE version LIKE '{Convert.ToString(type.Name)}';";
+
+                SQLiteCommand command = new SQLiteCommand(getMigrationVersionQuery, Connection);
+                SQLiteCommand commandBackup = new SQLiteCommand(getMigrationVersionQuery, Connection);
+
+
+                SQLiteDataReader reader = command.ExecuteReader();
+                if (!reader.HasRows)
+                {
+                    instance.Up(Connection);
+                    instance.AddToDatabase(Connection);
+                }
+
+                reader = commandBackup.ExecuteReader();
+                if (!reader.HasRows)
+                {
+                    instance.Up(BackupConnection);
+                    instance.AddToDatabase(BackupConnection);
+                }
+            }
+            catch
+            {
+                Console.WriteLine($"Version {version} not exists.");
+            }
+            
+            Connection.Close();
+            BackupConnection.Close();
+        }
+        
+        public void DowngradeAll()
+        {
+            Connection.Open();
+            BackupConnection.Open();
+            
+            var types = Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.Namespace.StartsWith("migration.version"));
+            
+            foreach (var t in types)
+            {
+                Migration instance = (Migration)Activator.CreateInstance(t);
+
+                string getMigrationVersionQuery =
+                    $"SELECT * FROM migrations WHERE version LIKE '{Convert.ToString(t.Name)}';";
+                
+                SQLiteCommand command = new SQLiteCommand(getMigrationVersionQuery, Connection);
+                SQLiteCommand commandBackup = new SQLiteCommand(getMigrationVersionQuery, Connection);
+                
+                
+                SQLiteDataReader reader = command.ExecuteReader();
+                if(reader.HasRows)
+                {
+                    instance.Down(Connection);
+                    instance.DeleteFromDatabase(Connection);
+                }
+                reader = commandBackup.ExecuteReader();
+                if(reader.HasRows)
+                {
+                    instance.Down(BackupConnection);
+                    instance.DeleteFromDatabase(BackupConnection);
+                }
+            }
+            
+            Connection.Close();
+            BackupConnection.Close();
+        }
+        
+        public void Downgrade(string version)
+        {
+            Connection.Open();
+            BackupConnection.Open();
+            
+            try
+            {
+                var type = Assembly
+                    .GetExecutingAssembly()
+                    .GetType($"migration.version.{version}");
+                
+                Migration instance = (Migration) Activator.CreateInstance(type);
+
+                string getMigrationVersionQuery =
+                    $"SELECT * FROM migrations WHERE version LIKE '{Convert.ToString(type.Name)}';";
+
+                SQLiteCommand command = new SQLiteCommand(getMigrationVersionQuery, Connection);
+                SQLiteCommand commandBackup = new SQLiteCommand(getMigrationVersionQuery, Connection);
+
+
+                SQLiteDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    instance.Down(Connection);
+                    instance.DeleteFromDatabase(Connection);
+                }
+
+                reader = commandBackup.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    instance.Down(BackupConnection);
+                    instance.DeleteFromDatabase(BackupConnection);
+                }
+            }
+            catch
+            {
+                Console.WriteLine($"Version {version} not exists.");
+            }
+            
+            Connection.Close();
+            BackupConnection.Close();
         }
 
     }
