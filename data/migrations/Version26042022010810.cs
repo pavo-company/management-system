@@ -35,7 +35,7 @@ namespace migration.version
         public void Down(SQLiteConnection connection)
         {
             string deleteUsers = 
-                "DELETE FROM users WHERE name LIKE '%';";
+                "DELETE FROM users WHERE name LIKE '%John%';";
             SQLiteCommand deleteUsersCommand = new SQLiteCommand(deleteUsers, connection);
             
             deleteUsersCommand.ExecuteNonQuery();

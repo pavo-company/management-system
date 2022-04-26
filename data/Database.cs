@@ -12,7 +12,7 @@ namespace management_system
         private const string BackupDatabasePath = "../../../data/backup.sqlite";
         public SQLiteConnection Connection;
         public SQLiteConnection BackupConnection;
-        private Migrations Migrations;
+        public Migrations Migrations;
 
         public Database()
         {
@@ -36,7 +36,6 @@ namespace management_system
             CreateTablesIfNotExists(tables, BackupConnection);
             
             Migrations = new Migrations(Connection, BackupConnection);
-            Migrations.MigrateAll();
             
             Close();
         }

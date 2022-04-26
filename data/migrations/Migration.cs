@@ -20,5 +20,15 @@ namespace migration
             command.ExecuteNonQuery();
             
         }
+        public void DeleteFromDatabase(SQLiteConnection Connection)
+        {
+            string query = 
+                $"DELETE FROM migrations WHERE version like '{this.GetType().Name}';";
+
+            SQLiteCommand command = new SQLiteCommand(query,Connection);
+            
+            command.ExecuteNonQuery();
+            
+        }
     }
 }
