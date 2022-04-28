@@ -8,7 +8,6 @@ namespace management_system
         static void Main(string[] args)
         {
             Database db = new Database();
-            db.Migrations.MigrateAll();
         }
     }
 }
