@@ -28,15 +28,12 @@ namespace migration.version
         override 
         public void Down(SQLiteConnection connection)
         {
-<<<<<<< HEAD
             ExecuteQuery("DROP TABLE users", connection);
-=======
             string deleteUsers = 
                 "DELETE FROM users WHERE name LIKE '%John%';";
             SQLiteCommand deleteUsersCommand = new SQLiteCommand(deleteUsers, connection);
             
             deleteUsersCommand.ExecuteNonQuery();
->>>>>>> 260aed5e06cda3d18fabbde28c6b833daae5e305
         }
     }
 }

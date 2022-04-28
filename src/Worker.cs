@@ -17,7 +17,7 @@ namespace management_system
         
         public override string ToString()
         {
-            return $"Name: {Name}Surname: {Surname}\tEmail: {Tin}\tSalary: {Salary}";
+            return $"Name: {Name}Surname: {Surname}\tTin: {Tin}\tSalary: {Salary}";
         }
         
         public void AddToDatabase(Database db)

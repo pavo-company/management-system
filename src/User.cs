@@ -14,13 +14,13 @@ namespace management_system
         }
         public override string ToString()
         {
-            return $"User:\n\tName: {Name}\n\tEmail: {Tin}\n";
+            return $"User:\tName: {Name}\tTin: {Tin}";
         }
 
         public void AddToDatabase(Database db)
         {
             string query = 
-                "INSERT INTO users ('name', 'surname', 'tin') VALUES (@name, @surname, @email)";
+                "INSERT INTO users ('name', 'surname', 'tin') VALUES (@name, @surname, @tin)";
 
             SQLiteCommand command = new SQLiteCommand(query, db.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
