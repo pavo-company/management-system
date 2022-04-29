@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace management_system
 {
@@ -9,6 +8,8 @@ namespace management_system
         {
             Database db = new Database();
             db.Migrations.MigrateAll();
+            license myLicense = new license();
+            Console.WriteLine(myLicense.newLicense());
         }
     }
 }
