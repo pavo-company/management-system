@@ -6,7 +6,7 @@ namespace migration.version
     public class Version25042022225000 : Migration
     {
         override 
-        public String Info => "Add License table";
+            protected string Info => "Add License table";
 
         override 
         public void Up(SQLiteConnection connection)

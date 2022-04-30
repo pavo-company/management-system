@@ -1,4 +1,5 @@
 ﻿using System;
+using migrations;
 
 namespace management_system
 {
@@ -7,9 +8,8 @@ namespace management_system
         static void Main(string[] args)
         {
             Database db = new Database();
-            db.Migrations.MigrateAll();
-            license myLicense = new license();
-            Console.WriteLine(myLicense.newLicense());
+            Migrations migration = new Migrations(db.Connection, db.BackupConnection);
+            migration.MigrateAll();
         }
     }
 }

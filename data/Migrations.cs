@@ -10,97 +10,94 @@ namespace migrations
 {
     public class Migrations
     {
-        public SQLiteConnection Connection;
-        public SQLiteConnection BackupConnection;
-        private List<string> tables;
+        private readonly SQLiteConnection _connection;
+        private readonly  SQLiteConnection _backupConnection;
         
         
-        public Migrations(SQLiteConnection Connection, SQLiteConnection BackupConnection)
+        public Migrations(SQLiteConnection connection, SQLiteConnection backupConnection)
         { 
-            this.Connection = Connection;
-            this.BackupConnection = BackupConnection;
+            _connection = connection;
+            _backupConnection = backupConnection;
             
         }
 
         public void MigrateAll()
         {
-            Connection.Open();
-            BackupConnection.Open();
-            
-            var types = Assembly
-                .GetExecutingAssembly()
-                .GetTypes()
-                .Where(t => t.Namespace.StartsWith("migration.version"));
-            
-            foreach (var t in types)
-            {
-                Migration instance = (Migration)Activator.CreateInstance(t);
-
-                string getMigrationVersionQuery =
-                    $"SELECT * FROM migrations WHERE version LIKE '{Convert.ToString(t.Name)}';";
-                
-                SQLiteCommand command = new SQLiteCommand(getMigrationVersionQuery, Connection);
-                SQLiteCommand commandBackup = new SQLiteCommand(getMigrationVersionQuery, BackupConnection);
-                
-                SQLiteDataReader reader = command.ExecuteReader();
-                if(!reader.HasRows)
-                {
-                    instance.Up(Connection);
-                    instance.AddToDatabase(Connection);
-                }
-                reader = commandBackup.ExecuteReader();
-                if(!reader.HasRows)
-                {
-                    instance.Up(BackupConnection);
-                    instance.AddToDatabase(BackupConnection);
-                }
-            }
-            
-            Connection.Close();
-            BackupConnection.Close();
-        }
-        
-        public void Migrate(string version)
-        {
-            Connection.Open();
-            BackupConnection.Open();
-            
+            _connection.Open();
+            _backupConnection.Open();
             try
             {
-                var type = Assembly
+                var types = Assembly
                     .GetExecutingAssembly()
-                    .GetType($"migration.version.{version}");
+                    .GetTypes()
+                    .Where(t => t.Namespace != null && t.Namespace.StartsWith("migration.version"));
                 
-                Migration instance = (Migration) Activator.CreateInstance(type);
-
-                string getMigrationVersionQuery =
-                    $"SELECT * FROM migrations WHERE version LIKE '{Convert.ToString(type.Name)}';";
-
-                SQLiteCommand command = new SQLiteCommand(getMigrationVersionQuery, Connection);
-                SQLiteCommand commandBackup = new SQLiteCommand(getMigrationVersionQuery, BackupConnection);
-
-
-                SQLiteDataReader reader = command.ExecuteReader();
-                if (!reader.HasRows)
+                foreach (var t in types)
                 {
-                    instance.Up(Connection);
-                    instance.AddToDatabase(Connection);
-                }
+                    Migration? instance = (Migration?) Activator.CreateInstance(t);
 
-                reader = commandBackup.ExecuteReader();
-                if (!reader.HasRows)
-                {
-                    instance.Up(BackupConnection);
-                    instance.AddToDatabase(BackupConnection);
+                    string getMigrationVersionQuery =
+                        $"SELECT * FROM migrations WHERE version LIKE '{t.Name}';";
+                    
+                    SQLiteCommand command = new SQLiteCommand(getMigrationVersionQuery, _connection);
+                    SQLiteCommand commandBackup = new SQLiteCommand(getMigrationVersionQuery, _backupConnection);
+                    
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    if(!reader.HasRows)
+                    {
+                        instance?.Up(_connection);
+                        instance?.AddToDatabase(_connection);
+                    }
+                    reader = commandBackup.ExecuteReader();
+                    if(!reader.HasRows)
+                    {
+                        instance?.Up(_backupConnection);
+                        instance?.AddToDatabase(_backupConnection);
+                    }
                 }
             }
             catch
             {
-                Console.WriteLine($"Version {version} not exists.");
+                Console.WriteLine("An error has occurred in the MigrateAll() function");
             }
+            _connection.Close();
+            _backupConnection.Close();
+        }
+        
+        public void Migrate(string version)
+        {
+            _connection.Open();
+            _backupConnection.Open();
             
-            Connection.Close();
-            BackupConnection.Close();
+            var type = Assembly
+                .GetExecutingAssembly()
+                .GetType($"migration.version.{version}");
+            
+            Migration? instance = (Migration?) Activator.CreateInstance(type ?? throw new ArgumentException($"Version {version} not exists."));
+
+            string getMigrationVersionQuery =
+                $"SELECT * FROM migrations WHERE version LIKE '{type.Name}';";
+
+            SQLiteCommand command = new SQLiteCommand(getMigrationVersionQuery, _connection);
+            SQLiteCommand commandBackup = new SQLiteCommand(getMigrationVersionQuery, _backupConnection);
+
+
+            SQLiteDataReader reader = command.ExecuteReader();
+            if (!reader.HasRows)
+            {
+                instance?.Up(_connection);
+                instance?.AddToDatabase(_connection);
+            }
+
+            reader = commandBackup.ExecuteReader();
+            if (!reader.HasRows)
+            {
+                instance?.Up(_backupConnection);
+                instance?.AddToDatabase(_backupConnection);
+            }
+
+            _connection.Close();
+            _backupConnection.Close();
         }
     }
 }

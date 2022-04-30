@@ -6,16 +6,16 @@ namespace migration
 {
     public class Migration
     {
-        public virtual String Info => "Default migration";
+        protected virtual string Info => "Default migration";
         public virtual void Up(SQLiteConnection connection){}
         public virtual void Down(SQLiteConnection connection){}
         
-        public void AddToDatabase(SQLiteConnection Connection)
+        public void AddToDatabase(SQLiteConnection connection)
         {
             string query = 
                 $"INSERT INTO migrations ('version', 'deployed_at', 'info') VALUES ('{this.GetType().Name}', '{DateTime.Now.ToString("yyyy-MM-dd")}', '{this.Info}');";
 
-            SQLiteCommand command = new SQLiteCommand(query,Connection);
+            SQLiteCommand command = new SQLiteCommand(query,connection);
             
             command.ExecuteNonQuery();
         }
@@ -25,12 +25,12 @@ namespace migration
             SQLiteCommand command = new SQLiteCommand(query, connection);
             command.ExecuteNonQuery();
         }
-        public void DeleteFromDatabase(SQLiteConnection Connection)
+        public void DeleteFromDatabase(SQLiteConnection connection)
         {
             string query = 
                 $"DELETE FROM migrations WHERE version like '{this.GetType().Name}';";
 
-            SQLiteCommand command = new SQLiteCommand(query,Connection);
+            SQLiteCommand command = new SQLiteCommand(query,connection);
             
             command.ExecuteNonQuery();
             

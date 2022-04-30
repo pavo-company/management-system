@@ -5,7 +5,8 @@ namespace migration.version
 {
     public class Version26042022234010 : Migration
     {
-        public override String Info => "Add Extractions";
+        override 
+            protected string Info => "Add Extractions";
         
         public override void Up(SQLiteConnection connection)
         {

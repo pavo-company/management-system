@@ -30,7 +30,7 @@ namespace management_system
             
             SQLiteDataReader reader = getTables.ExecuteReader();
             while (reader.Read())
-                tables.Add(Convert.ToString(reader["name"]));
+                tables.Add(Convert.ToString(reader["name"]) ?? throw new ArgumentException());
                 
             CreateTablesIfNotExists(tables, Connection);
             CreateTablesIfNotExists(tables, BackupConnection);

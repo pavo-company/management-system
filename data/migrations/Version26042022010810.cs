@@ -6,7 +6,7 @@ namespace migration.version
     public class Version26042022010810 : Migration
     {
         override 
-        public string Info => "Add Users";
+            protected string Info=> "Add Users";
 
         override 
         public void Up(SQLiteConnection connection)

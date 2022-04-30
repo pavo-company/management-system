@@ -5,7 +5,8 @@ namespace migration.version
 {
     public class Version26042022230520 : Migration
     {
-        public override String Info => "Add Workers";
+        override 
+            protected string Info => "Add Workers";
         
         public override void Up(SQLiteConnection connection)
         {
