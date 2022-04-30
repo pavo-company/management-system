@@ -37,17 +37,7 @@ namespace management_system
             
             Migrations = new Migrations(Connection, BackupConnection);
             
-            if (tables.Contains("license"))
-            {
-                this.checkLicense();
-            }
-            
             Close();
-        }
-
-        private void checkLicense()
-        {
-            throw new NotImplementedException();
         }
 
         private static void CreateDatabaseIfNotExists()
