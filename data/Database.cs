@@ -199,6 +199,8 @@ namespace management_system
             Close();
         }
 
+        
+
         public void Open()
         {
             Connection.Open();
