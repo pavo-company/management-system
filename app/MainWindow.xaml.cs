@@ -25,7 +25,22 @@ namespace management_system
             InitializeComponent();
             WindowState = WindowState.Maximized;
             Background = new SolidColorBrush(Color.FromRgb(24, 53, 92));
-            
+            DataListView.Background = new SolidColorBrush(Color.FromRgb(24, 53, 92));
+        }
+
+        private void ShowWorkers(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ShowItems(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ShowOrders(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

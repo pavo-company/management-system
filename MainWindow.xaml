@@ -7,7 +7,34 @@
         mc:Ignorable="d"
         Title="Warehouse Management System">
     <Grid>
-        <TextBox Height="25" Width="100" >Siema</TextBox>
-
+        <TextBox Name="SearchBar" 
+            Width="600" Height="40" Margin="0, 20, 0, 0"
+            HorizontalAlignment="Center" VerticalAlignment="Top" Padding="30,5"
+            FontSize="20">
+            Search
+        </TextBox>
+        <Button Name="ButtonWorkers" Background="Coral" 
+                Width="200" Height="200" Margin="40, 70, 20, 20"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Click="ShowWorkers">
+            Workers
+        </Button>
+        <Button Name="ButtonItems" Background="Coral" 
+                Width="200" Height="200" Margin="40, 30, 20, 30"
+                HorizontalAlignment="Left" VerticalAlignment="Center"
+                Click="ShowItems">
+            Items
+        </Button>
+        <Button Name="ButtonOrders" Background="Coral" 
+                Width="200" Height="200" Margin="40, 20, 20, 70"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Click="ShowOrders">
+            Orders and Extractions
+        </Button>
+        <ListView Name="DataListView" 
+            Width="1200" Height="650" Margin="20, 20, 40, 70" 
+            HorizontalAlignment="Right" VerticalAlignment="Bottom"> 
+                Hello, Sir. Have a nice day!
+        </ListView>
     </Grid>
 </Window>
