@@ -119,32 +119,13 @@ namespace management_system
             }
         }
 
-        public void PrintAllUsers()
+        public SQLiteDataReader GetAllData(string table)
         {
-            string getUsersDataQuery = "SELECT id, name, surname, tin FROM users";
+            string getUsersDataQuery = $"SELECT * FROM {table}";
             SQLiteCommand command = new SQLiteCommand(getUsersDataQuery, Connection);
             
-            Connection.Open();
             SQLiteDataReader reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                Console.WriteLine($"{reader[0]}\t{reader[1]}\t{reader[2]}\t{reader[3]}");
-            }
-            Connection.Close();
-        }
-        
-        public void PrintAllWorkers()
-        {
-            string getUsersDataQuery = "SELECT id, name, surname, tin, salary FROM workers";
-            SQLiteCommand command = new SQLiteCommand(getUsersDataQuery, Connection);
-            
-            Connection.Open();
-            SQLiteDataReader reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                Console.WriteLine($"{reader[0]}\t{reader[1]}\t{reader[2]}\t{reader[3]}\t{reader[4]}");
-            }
-            Connection.Close();
+            return reader;
         }
 
         public int HowManyRecords(string table)
@@ -198,8 +179,6 @@ namespace management_system
             backupCommand.ExecuteNonQuery();
             Close();
         }
-
-        
 
         public void Open()
         {

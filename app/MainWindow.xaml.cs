@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,19 @@ namespace management_system
 
         private void ShowWorkers(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            Database db = new Database();
+            db.Open();
+            SQLiteDataReader dataReader = db.GetAllData("workers");
+
+            // foreach (var column in dataReader)
+            ListViewItem list = new ListViewItem();
+            foreach (var col in dataReader)
+            {
+                list.
+                
+            }
+            
+            db.Close();
         }
 
         private void ShowItems(object sender, RoutedEventArgs e)
