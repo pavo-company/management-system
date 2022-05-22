@@ -35,12 +35,10 @@ namespace management_system
             db.Open();
             SQLiteDataReader dataReader = db.GetAllData("workers");
 
-            // foreach (var column in dataReader)
-            ListViewItem list = new ListViewItem();
+            DataListView.Items.Clear();
             foreach (var col in dataReader)
             {
-                list.
-                
+                DataListView.Items.Add(col.ToString());
             }
             
             db.Close();
@@ -48,12 +46,32 @@ namespace management_system
 
         private void ShowItems(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            Database db = new Database();
+            db.Open();
+            SQLiteDataReader dataReader = db.GetAllData("items");
+
+            DataListView.Items.Clear();
+            foreach (var col in dataReader)
+            {
+                DataListView.Items.Add(col.ToString());
+            }
+            
+            db.Close();
         }
 
         private void ShowOrders(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            Database db = new Database();
+            db.Open();
+            SQLiteDataReader dataReader = db.GetAllData("orders");
+
+            DataListView.Items.Clear();
+            foreach (var col in dataReader)
+            {
+                DataListView.Items.Add(col.ToString());
+            }
+            
+            db.Close();
         }
     }
 }
