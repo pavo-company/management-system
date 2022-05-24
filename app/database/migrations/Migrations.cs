@@ -34,6 +34,7 @@ namespace migrations
                 
                 foreach (var t in types)
                 {
+                    #nullable enable
                     Migration? instance = (Migration?) Activator.CreateInstance(t);
 
                     string getMigrationVersionQuery =
@@ -73,6 +74,7 @@ namespace migrations
                 .GetExecutingAssembly()
                 .GetType($"migration.version.{version}");
             
+            #nullable enable
             Migration? instance = (Migration?) Activator.CreateInstance(type ?? throw new ArgumentException($"Version {version} not exists."));
 
             string getMigrationVersionQuery =
