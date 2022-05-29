@@ -38,7 +38,7 @@ namespace management_system
             DataListView.Items.Clear();
             while (dataReader.Read())
             {
-                DataListView.Items.Add(String.Format("{0} {1} {2}", dataReader[0], dataReader[1], dataReader[2]));
+                DataListView.Items.Add($"{dataReader[0]} {dataReader[1]} {dataReader[2]}");
             }
             
             db.Close();
@@ -53,7 +53,7 @@ namespace management_system
             DataListView.Items.Clear();
             while (dataReader.Read())
             {
-                DataListView.Items.Add(String.Format("{0} {1} {2}", dataReader[0], dataReader[1], dataReader[2]));
+                DataListView.Items.Add($"{dataReader[0]} {dataReader[1]} {dataReader[2]}");
             }
             
             db.Close();
