@@ -6,35 +6,34 @@
         xmlns:local="clr-namespace:management_system"
         mc:Ignorable="d"
         Title="Warehouse Management System">
-    <Grid>
-        <TextBox Name="SearchBar" 
-            Width="600" Height="40" Margin="0, 20, 0, 0"
-            HorizontalAlignment="Center" VerticalAlignment="Top" Padding="30,5"
-            FontSize="20">
-            Search
-        </TextBox>
-        <Button Name="ButtonWorkers" Background="Coral" 
-                Width="200" Height="200" Margin="40, 70, 20, 20"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
-                Click="ShowWorkers">
-            Workers
-        </Button>
+    <Grid Height="711" Width="1471">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Image HorizontalAlignment="Left" Height="124" Margin="-8,-4,0,0" VerticalAlignment="Top" Width="397" Source="/src/img/logo/dark_logo_transparent_background.png" Grid.ColumnSpan="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="711" VerticalAlignment="Center" Width="314" Fill="#194988EC" Grid.ColumnSpan="2"/>
+        <Rectangle HorizontalAlignment="Center" Height="115" VerticalAlignment="Top" Width="1472" Fill="#194988EC" Grid.Column="1"/>
         <Button Name="ButtonItems" Background="Coral" 
-                Width="200" Height="200" Margin="40, 30, 20, 30"
-                HorizontalAlignment="Left" VerticalAlignment="Center"
-                Click="ShowItems">
+                Width="108" Height="108" Margin="96,294,0,0"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Click="ShowItems" Grid.ColumnSpan="2">
             Items
         </Button>
         <Button Name="ButtonOrders" Background="Coral" 
-                Width="200" Height="200" Margin="40, 20, 20, 70"
+                Width="106" Height="106" Margin="98,0,0,179"
                 HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                Click="ShowOrders">
+                Click="ShowOrders" Grid.ColumnSpan="2">
             Orders and Extractions
         </Button>
         <ListView Name="DataListView" 
-            Width="1200" Height="650" Margin="20, 20, 40, 70" 
-            HorizontalAlignment="Right" VerticalAlignment="Bottom"> 
-                Hello, Sir. Have a nice day!
+            Width="753" Height="519" Margin="0,0,375,52" 
+            HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
+            Hello, Sir. Have a nice day!
         </ListView>
+        <Button x:Name="ButtonWorkers" Background="Coral" 
+                Width="106" Height="103" Margin="98,168,0,0"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Click="ShowWorkers" Content="Workers" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

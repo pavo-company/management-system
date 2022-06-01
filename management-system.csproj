@@ -13,10 +13,17 @@
 
     <ItemGroup>
       <ApplicationDefinition Remove="App.xaml" />
+      <None Remove="src\img\logo\dark_logo_transparent_background.png" />
       <ApplicationDefinition Include="app\views\App.xaml">
         <Generator>MSBuild:Compile</Generator>
         <XamlRuntime>Wpf</XamlRuntime>
       </ApplicationDefinition>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="src\img\logo\dark_logo_transparent_background.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

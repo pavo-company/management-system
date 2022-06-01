@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using management_system.app.views.Controls.SearchBox;
 
 namespace management_system
 {
@@ -24,9 +25,6 @@ namespace management_system
         public MainWindow()
         {
             InitializeComponent();
-            WindowState = WindowState.Maximized;
-            Background = new SolidColorBrush(Color.FromRgb(150,150,150));
-            DataListView.Background = new SolidColorBrush(Color.FromRgb(150, 150, 150));
         }
 
         private void ShowWorkers(object sender, RoutedEventArgs e)
@@ -40,7 +38,6 @@ namespace management_system
             {
                 DataListView.Items.Add($"{dataReader[0]} {dataReader[1]} {dataReader[2]}");
             }
-            
             db.Close();
         }
 
@@ -68,7 +65,7 @@ namespace management_system
             DataListView.Items.Clear();
             while (dataReader.Read())
             {
-                DataListView.Items.Add(String.Format($"{dataReader[0]} {dataReader[1]} {dataReader[2]}" ));
+                DataListView.Items.Add(String.Format($"{dataReader[0]} {dataReader[1]} {dataReader[2]}"));
             }
             
             db.Close();
