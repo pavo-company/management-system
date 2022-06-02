@@ -38,8 +38,6 @@ namespace management_system
             {
                 DataListView.Items.Add($"{dataReader[0]} {dataReader[1]} {dataReader[2]}");
             }
-
-
             db.Close();
         }
 
@@ -54,10 +52,7 @@ namespace management_system
             {
                 DataListView.Items.Add($"{dataReader[0]} {dataReader[1]} {dataReader[2]}");
             }
-
-
-
-
+            
             db.Close();
         }
 
@@ -72,7 +67,7 @@ namespace management_system
             {
                 DataListView.Items.Add(String.Format($"{dataReader[0]} {dataReader[1]} {dataReader[2]}"));
             }
-
+            
             db.Close();
         }
     }
