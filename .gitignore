@@ -4,3 +4,4 @@ obj/
 management-system.csproj
 bin/
 .idea/
+/.vs/management-system

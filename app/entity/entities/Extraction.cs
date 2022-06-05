@@ -5,13 +5,24 @@ namespace management_system
 {
     public class Extraction
     {
-        private int WorkerId { get; set; }
-        private int ItemId { get; set; }
-        private int UserId { get; set; }
-        private int Amount { get; set; }
+        public int Id { get; init; }
+        public int WorkerId { get; set; }
+        public int ItemId { get; set; }
+        public int UserId { get; set; }
+        public int Amount { get; set; }
 
         public Extraction(int workerId, int itemId, int userId, int amount)
         {
+            Id = -1;
+            WorkerId = workerId;
+            ItemId = itemId;
+            UserId = userId;
+            Amount = amount;
+        }
+
+        public Extraction(int id, int workerId, int itemId, int userId, int amount)
+        {
+            Id = id;
             WorkerId = workerId;
             ItemId = itemId;
             UserId = userId;

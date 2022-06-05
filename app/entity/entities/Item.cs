@@ -1,42 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
 
 namespace management_system
 {
     public class Item
     {
-        private string Name { get; init; }
-        private int Amount { get; set; }
-        private int MinAmount { get; set; }
-        private List<string> Tags { get; set; }
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public int Amount { get; set; }
+        public int MinAmount { get; set; }
+        public int Price { get; set; }
+        public List<Tag> Tags { get; set; }
 
-        public Item(string name, int amount, int minAmount, List<string> tags)
+        public Item(string name, int amount, int minAmount, int price, List<Tag> tags)
         {
+            Id = -1;
             Name = name;
             Amount = amount;
             MinAmount = minAmount;
+            Price = price;
             Tags = tags;
         }
+
+        public Item(int id, string name, int amount, int minAmount, int price, List<Tag> tags)
+        {
+            Id = id;
+            Name = name;
+            Amount = amount;
+            MinAmount = minAmount;
+            Price = price;
+            Tags = tags;
+        }
+
         public void AddToDatabase(Database db)
         {
             string query = 
-                "INSERT INTO items ('name', 'amount', 'min_amount') VALUES (@name, @amount, @min)";
-            string getAllNames = "SELECT name FROM items";
+                "INSERT INTO items ('name', 'amount', 'min_amount', 'price') VALUES (@name, @amount, @min, @price)";
             
-            SQLiteCommand allNamesCommand = new SQLiteCommand(getAllNames, db.Connection);
             SQLiteCommand addCommand = new SQLiteCommand(query, db.Connection);
             SQLiteCommand addBackupCommand = new SQLiteCommand(query, db.BackupConnection);
             
             db.Open();
-            
-            SQLiteDataReader namesReader = allNamesCommand.ExecuteReader();
-            while (namesReader.Read())
-            {
-                if (Name == Convert.ToString(namesReader["name"]))
-                    throw new Exception("You have element of that name in your database");
-            }
 
             addCommand.Parameters.AddWithValue("@name", Name);
             addBackupCommand.Parameters.AddWithValue("@name", Name);
@@ -46,37 +51,21 @@ namespace management_system
             
             addCommand.Parameters.AddWithValue("@min", MinAmount);
             addBackupCommand.Parameters.AddWithValue("@min", MinAmount);
-            
+
+            addCommand.Parameters.AddWithValue("@price", Price);
+            addBackupCommand.Parameters.AddWithValue("@price", Price);
+
             addCommand.ExecuteNonQuery();
             addBackupCommand.ExecuteNonQuery();
             
             db.Close();
-            
-            AddTagsToDatabase(db, db.HowManyRecords("items"));
-        }
 
-        private void AddTagsToDatabase(Database db, int index)
-        {
-            string query = 
-                "INSERT INTO tags (name, item_id) VALUES (@name, @item_id);";
-            SQLiteCommand command = new SQLiteCommand(query, db.Connection);
-            SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
-            
-            db.Open();
-            
-            foreach (string tag in Tags)
+            foreach (Tag tag in Tags)
             {
-                command.Parameters.AddWithValue("@name", tag);
-                backupCommand.Parameters.AddWithValue("@name", tag);
-
-                command.Parameters.AddWithValue("@item_id", index);
-                backupCommand.Parameters.AddWithValue("@item_id", index);
-
-                command.ExecuteNonQuery();
-                backupCommand.ExecuteNonQuery();
+                tag.AddToDatabase(db);
             }
-            db.Close();
         }
+
         public void ReduceItem(string name, int amount, Database db)
         {
             string query = $"SELECT amount FROM items WHERE name={name}";
@@ -96,11 +85,11 @@ namespace management_system
             updateCommand.ExecuteNonQuery();
             db.Connection.Close();
         }
-        public void AddTag(string tag)
+        public void AddTag(Tag tag)
         {
             Tags.Add(tag);
         }
-        public void RemoveTag(string tag)
+        public void RemoveTag(Tag tag)
         {
             Tags.Remove(tag);
         }

@@ -3,49 +3,53 @@ using System.Data.SQLite;
 
 namespace management_system
 {
-    public class Worker : Person
+    public class User : Person
     {
-        private int Salary { get; init; }
          
-        public Worker(string name, string surname, string tin, int salary)
+        public User(string name, string surname, string tin)
         {
+            Id = -1;
             Name = name;
-            Surname = surname;
             Tin = tin;
-            Salary = salary;
+            Surname = surname;
         }
-        
+        public User(int id, string name, string surname, string tin)
+        {
+            Id = id;
+            Name = name;
+            Tin = tin;
+            Surname = surname;
+        }
+
         public override string ToString()
         {
-            return $"Name: {Name}Surname: {Surname}\tTin: {Tin}\tSalary: {Salary}";
+            return $"User:\tName: {Name}\tTin: {Tin}";
         }
-        
+
         public void AddToDatabase(Database db)
         {
-            string query = 
-                "INSERT INTO workers ('name', 'surname', 'salary', 'tin') VALUES (@name, @surname, @salary, @tin)";
+            string query =
+                "INSERT INTO users ('name', 'surname', 'tin') VALUES (@name, @surname, @tin)";
 
             SQLiteCommand command = new SQLiteCommand(query, db.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
-            
+
             db.Open();
-            
+
             command.Parameters.AddWithValue("@name", Name);
             backupCommand.Parameters.AddWithValue("@name", Name);
-            
+
             command.Parameters.AddWithValue("@surname", Surname);
             backupCommand.Parameters.AddWithValue("@surname", Surname);
-            
-            command.Parameters.AddWithValue("@salary", Salary);
-            backupCommand.Parameters.AddWithValue("@salary", Salary);
-            
+
             command.Parameters.AddWithValue("@tin", Tin);
             backupCommand.Parameters.AddWithValue("@tin", Tin);
-            
+
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();
-            
+
             db.Close();
         }
+
     }
 }
