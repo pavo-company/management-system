@@ -33,38 +33,7 @@ namespace management_system
             Tags = tags;
         }
 
-        public void AddToDatabase(Database db)
-        {
-            string query = 
-                "INSERT INTO items ('name', 'amount', 'min_amount', 'price') VALUES (@name, @amount, @min, @price)";
-            
-            SQLiteCommand addCommand = new SQLiteCommand(query, db.Connection);
-            SQLiteCommand addBackupCommand = new SQLiteCommand(query, db.BackupConnection);
-            
-            db.Open();
-
-            addCommand.Parameters.AddWithValue("@name", Name);
-            addBackupCommand.Parameters.AddWithValue("@name", Name);
-            
-            addCommand.Parameters.AddWithValue("@amount", Amount);
-            addBackupCommand.Parameters.AddWithValue("@amount", Amount);
-            
-            addCommand.Parameters.AddWithValue("@min", MinAmount);
-            addBackupCommand.Parameters.AddWithValue("@min", MinAmount);
-
-            addCommand.Parameters.AddWithValue("@price", Price);
-            addBackupCommand.Parameters.AddWithValue("@price", Price);
-
-            addCommand.ExecuteNonQuery();
-            addBackupCommand.ExecuteNonQuery();
-            
-            db.Close();
-
-            foreach (Tag tag in Tags)
-            {
-                tag.AddToDatabase(db);
-            }
-        }
+        public void AddToDatabase(Database db) => db.em.AddItem(this);
 
         public void ReduceItem(string name, int amount, Database db)
         {

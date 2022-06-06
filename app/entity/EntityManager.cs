@@ -7,12 +7,28 @@ namespace management_system.app.entity
     public class EntityManager
     {
         private static Database _database;
+        private static List<Action> _update;
 
         public EntityManager(Database database)
         {
             _database = database; 
+            _update = new List<Action>();
         }
 
+        /// <summary>
+        /// Updates all changed entities
+        /// </summary>
+        /// <returns>If everything went well true; otherwise false</returns>
+        public bool flush()
+        {
+            foreach(var action in _update)
+                action();
+
+            _update.Clear();
+            return true;
+        }
+
+       
         /// <param name="id">User id</param>
         /// <returns>If the user exists it returns his object; otherwise null</returns>
         public User GetUser(int id)
@@ -25,7 +41,46 @@ namespace management_system.app.entity
             if(!reader.Read())
                 return null;
 
-            return new User(Convert.ToInt32(reader[0]),$"{reader[1]}", $"{reader[2]}", $"{reader[3]}");
+            User user = new User(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[3]}");
+            _update.Add(() =>
+                {
+
+                });
+            return user;
+        }
+        /// <summary>
+        /// Add user to database
+        /// </summary>
+        /// <param name="user">User object</param>
+        /// <returns>If adding user went well true; otherwise false</returns>
+        public bool AddUser(User user)
+        {
+            if(GetUser(user.Id) != null)
+                return false;
+
+            string query =
+                "INSERT INTO users ('name', 'surname', 'tin') VALUES (@name, @surname, @tin)";
+
+            SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
+            SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
+
+            _database.Open();
+
+            command.Parameters.AddWithValue("@name", user.Name);
+            backupCommand.Parameters.AddWithValue("@name", user.Name);
+
+            command.Parameters.AddWithValue("@surname", user.Surname);
+            backupCommand.Parameters.AddWithValue("@surname", user.Surname);
+
+            command.Parameters.AddWithValue("@tin", user.Tin);
+            backupCommand.Parameters.AddWithValue("@tin", user.Tin);
+
+            command.ExecuteNonQuery();
+            backupCommand.ExecuteNonQuery();
+
+            _database.Close();
+
+            return true;
         }
 
         /// <param name="id">Worker id</param>
@@ -40,7 +95,46 @@ namespace management_system.app.entity
             if (!reader.Read())
                 return null;
 
-            return new Worker(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[4]}", Convert.ToInt32(reader[3]));
+            Worker worker = new Worker(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[4]}", Convert.ToInt32(reader[3]));
+            _update.Add(worker);
+            return worker;
+        }
+        /// <summary>
+        /// Add worker to database
+        /// </summary>
+        /// <param name="worker">Worker object</param>
+        /// <returns>If adding worker went well true; otherwise false</returns>
+        public bool AddWorker(Worker worker)
+        {
+            if (GetWorker(worker.Id) != null)
+                return false;
+
+            string query =
+                "INSERT INTO workers ('name', 'surname', 'salary', 'tin') VALUES (@name, @surname, @salary, @tin)";
+
+            SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
+            SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
+
+            _database.Open();
+
+            command.Parameters.AddWithValue("@name", worker.Name);
+            backupCommand.Parameters.AddWithValue("@name", worker.Name);
+
+            command.Parameters.AddWithValue("@surname", worker.Surname);
+            backupCommand.Parameters.AddWithValue("@surname", worker.Surname);
+
+            command.Parameters.AddWithValue("@salary", worker.Salary);
+            backupCommand.Parameters.AddWithValue("@salary", worker.Salary);
+
+            command.Parameters.AddWithValue("@tin", worker.Tin);
+            backupCommand.Parameters.AddWithValue("@tin", worker.Tin);
+
+            command.ExecuteNonQuery();
+            backupCommand.ExecuteNonQuery();
+
+            _database.Close();
+
+            return true;
         }
 
         /// <param name="id">Supplier id</param>
@@ -55,7 +149,40 @@ namespace management_system.app.entity
             if (!reader.Read())
                 return null;
 
-            return new Supplier(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}");
+            Supplier supplier = new Supplier(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}");
+            _update.Add(supplier);
+            return supplier;
+        }
+        /// <summary>
+        /// Add supplier to database
+        /// </summary>
+        /// <param name="supplier">Supplier object</param>
+        /// <returns>If adding supplier went well true; otherwise false</returns>
+        public bool AddSupplier(Supplier supplier)
+        {
+            if (GetSupplier(supplier.Id) != null)
+                return false;
+
+            string query =
+                "INSERT INTO suppliers ('name', 'tin') VALUES (@name, @tin)";
+
+            SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
+            SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
+
+            _database.Open();
+
+            command.Parameters.AddWithValue("@name", supplier.Name);
+            backupCommand.Parameters.AddWithValue("@name", supplier.Name);
+
+            command.Parameters.AddWithValue("@tin", supplier.Tin);
+            backupCommand.Parameters.AddWithValue("@tin", supplier.Tin);
+
+            command.ExecuteNonQuery();
+            backupCommand.ExecuteNonQuery();
+
+            _database.Close();
+
+            return true;
         }
 
 
@@ -71,7 +198,49 @@ namespace management_system.app.entity
             if (!reader.Read())
                 return null;
 
-            return new Order(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToDateTime(reader[4]), Convert.ToBoolean(reader[5]));
+            Order order = new Order(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToDateTime(reader[4]), Convert.ToBoolean(reader[5]));
+            _update.Add(order);
+            return order;
+        }
+        /// <summary>
+        /// Add order to database
+        /// </summary>
+        /// <param name="order">Order object</param>
+        /// <returns>If adding order went well true; otherwise false</returns>
+        public bool AddOrder(Order order)
+        {
+            if (GetOrder(order.Id) != null)
+                return false;
+
+            string query =
+                "INSERT INTO orders ('supplier_id', 'item_id', 'amount', 'date', 'is_cyclic') VALUES (@supplier_id, @item_id, @amount, @date, @is_cyclic)";
+
+            SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
+            SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
+
+            _database.Open();
+
+            command.Parameters.AddWithValue("@supplier_id", order.SupplierId);
+            backupCommand.Parameters.AddWithValue("@supplier_id", order.SupplierId);
+
+            command.Parameters.AddWithValue("@item_id", order.ItemId);
+            backupCommand.Parameters.AddWithValue("@item_id", order.ItemId);
+
+            command.Parameters.AddWithValue("@amount", order.Amount);
+            backupCommand.Parameters.AddWithValue("@amount", order.Amount);
+
+            command.Parameters.AddWithValue("@date", order.Date.ToString());
+            backupCommand.Parameters.AddWithValue("@date", order.Date.ToString());
+
+            command.Parameters.AddWithValue("@is_cyclic", order.IsCyclic);
+            backupCommand.Parameters.AddWithValue("@is_cyclic", order.IsCyclic);
+
+            command.ExecuteNonQuery();
+            backupCommand.ExecuteNonQuery();
+
+            _database.Close();
+
+            return true;
         }
 
         /// <param name="id">Extraction id</param>
@@ -86,7 +255,46 @@ namespace management_system.app.entity
             if (!reader.Read())
                 return null;
 
-            return new Extraction(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]));
+            Extraction extraction = new Extraction(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]));
+            _update.Add(extraction);
+            return extraction;
+        }
+        /// <summary>
+        /// Add extraction to database
+        /// </summary>
+        /// <param name="extraction">Extraction object</param>
+        /// <returns>If adding extraction went well true; otherwise false</returns>
+        public bool AddExtraction(Extraction extraction)
+        {
+            if (GetExtraction(extraction.Id) != null)
+                return false;
+
+            string query =
+                "INSERT INTO extractions ('worker_id', 'item_id', 'amount', 'user_id') VALUES (@worker_id, @item_id, @amount, @user_id)";
+
+            SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
+            SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
+
+            _database.Open();
+
+            command.Parameters.AddWithValue("@worker_id", extraction.WorkerId);
+            backupCommand.Parameters.AddWithValue("@worker_id", extraction.WorkerId);
+
+            command.Parameters.AddWithValue("@item_id", extraction.ItemId);
+            backupCommand.Parameters.AddWithValue("@item_id", extraction.ItemId);
+
+            command.Parameters.AddWithValue("@amount", extraction.Amount);
+            backupCommand.Parameters.AddWithValue("@amount", extraction.Amount);
+
+            command.Parameters.AddWithValue("@user_id", extraction.UserId);
+            backupCommand.Parameters.AddWithValue("@user_id", extraction.UserId);
+
+            command.ExecuteNonQuery();
+            backupCommand.ExecuteNonQuery();
+
+            _database.Close();
+
+            return true;
         }
 
         /// <param name="id">Tag id</param>
@@ -101,7 +309,40 @@ namespace management_system.app.entity
             if (!reader.Read())
                 return null;
 
-            return new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
+            Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
+            _update.Add(tag);
+            return tag;
+        }
+        /// <summary>
+        /// Add tag to database
+        /// </summary>
+        /// <param name="tag">Tag object</param>
+        /// <returns>If adding tag went well true; otherwise false</returns>
+        public bool AddTag(Tag tag)
+        {
+            if (GetTag(tag.Id) != null)
+                return false;
+
+            string query =
+                "INSERT INTO tags ('name', 'item_id') VALUES (@name, @item_id)";
+
+            SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
+            SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
+
+            _database.Open();
+
+            command.Parameters.AddWithValue("@name", tag.Name);
+            backupCommand.Parameters.AddWithValue("@name", tag.Name);
+
+            command.Parameters.AddWithValue("@item_id", tag.ItemId);
+            backupCommand.Parameters.AddWithValue("@item_id", tag.ItemId);
+
+            command.ExecuteNonQuery();
+            backupCommand.ExecuteNonQuery();
+
+            _database.Close();
+
+            return true;
         }
 
         /// <param name="id">Item id</param>
@@ -115,7 +356,11 @@ namespace management_system.app.entity
             List<Tag> tags = new List<Tag>();
 
             while (reader.Read())
-                tags.Add(new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2])));
+            {
+                Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
+                _update.Add(tag);
+                tags.Add(tag);
+            }
 
             if (tags.Count == 0) 
                 return null;
@@ -139,7 +384,49 @@ namespace management_system.app.entity
             if (!reader.Read())
                 return null;
 
-            return new Item(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]), GetItemTags(Convert.ToInt32(reader[0])));
+            Item item = new Item(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]), GetItemTags(Convert.ToInt32(reader[0])));
+            _update.Add(item);
+            return item;
+        }
+        /// <summary>
+        /// Add item to database
+        /// </summary>
+        /// <param name="item">Item object</param>
+        /// <returns>If adding item went well true; otherwise false</returns>
+        public bool AddItem(Item item)
+        {
+            if (GetItem(item.Id) != null)
+                return false;
+
+            string query =
+                "INSERT INTO items ('name', 'amount', 'min_amount', 'price') VALUES (@name, @amount, @min, @price)";
+
+            SQLiteCommand addCommand = new SQLiteCommand(query, _database.Connection);
+            SQLiteCommand addBackupCommand = new SQLiteCommand(query, _database.BackupConnection);
+
+            _database.Open();
+
+            addCommand.Parameters.AddWithValue("@name", item.Name);
+            addBackupCommand.Parameters.AddWithValue("@name", item.Name);
+
+            addCommand.Parameters.AddWithValue("@amount", item.Amount);
+            addBackupCommand.Parameters.AddWithValue("@amount", item.Amount);
+
+            addCommand.Parameters.AddWithValue("@min", item.MinAmount);
+            addBackupCommand.Parameters.AddWithValue("@min", item.MinAmount);
+
+            addCommand.Parameters.AddWithValue("@price", item.Price);
+            addBackupCommand.Parameters.AddWithValue("@price", item.Price);
+
+            addCommand.ExecuteNonQuery();
+            addBackupCommand.ExecuteNonQuery();
+
+            _database.Close();
+
+            foreach (Tag tag in item.Tags)
+                AddTag(tag);
+
+            return true;
         }
 
     }

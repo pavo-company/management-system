@@ -23,26 +23,6 @@ namespace management_system
             ItemId = itemId;
         }
 
-        public void AddToDatabase(Database db)
-        {
-            string query = 
-                "INSERT INTO tags ('name', 'item_id') VALUES (@name, @item_id)";
-
-            SQLiteCommand command = new SQLiteCommand(query, db.Connection);
-            SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
-            
-            db.Open();
-            
-            command.Parameters.AddWithValue("@name", Name);
-            backupCommand.Parameters.AddWithValue("@name", Name);
-            
-            command.Parameters.AddWithValue("@item_id", ItemId);
-            backupCommand.Parameters.AddWithValue("@item_id", ItemId);
-            
-            command.ExecuteNonQuery();
-            backupCommand.ExecuteNonQuery();
-            
-            db.Close();
-        }
+        public void AddToDatabase(Database db) => db.em.AddTag(this);
     }
 }
