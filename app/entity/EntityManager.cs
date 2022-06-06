@@ -17,6 +17,7 @@ namespace management_system.app.entity
 
         /// <summary>
         /// Updates all changed entities
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <returns>If everything went well true; otherwise false</returns>
         public bool flush()
@@ -28,7 +29,10 @@ namespace management_system.app.entity
             return true;
         }
 
-       
+
+        ///<summary>
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
         /// <param name="id">User id</param>
         /// <returns>If the user exists it returns his object; otherwise null</returns>
         public User GetUser(int id)
@@ -50,6 +54,7 @@ namespace management_system.app.entity
         }
         /// <summary>
         /// Add user to database
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <param name="user">User object</param>
         /// <returns>If adding user went well true; otherwise false</returns>
@@ -64,7 +69,6 @@ namespace management_system.app.entity
             SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
 
-            _database.Open();
 
             command.Parameters.AddWithValue("@name", user.Name);
             backupCommand.Parameters.AddWithValue("@name", user.Name);
@@ -78,11 +82,13 @@ namespace management_system.app.entity
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();
 
-            _database.Close();
 
             return true;
         }
 
+        ///<summary>
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
         /// <param name="id">Worker id</param>
         /// <returns>If the worker exists it returns his object; otherwise null</returns>
         public Worker GetWorker(int id)
@@ -96,11 +102,15 @@ namespace management_system.app.entity
                 return null;
 
             Worker worker = new Worker(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[4]}", Convert.ToInt32(reader[3]));
-            _update.Add(worker);
+            _update.Add(() =>
+                {
+
+                });
             return worker;
         }
         /// <summary>
         /// Add worker to database
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <param name="worker">Worker object</param>
         /// <returns>If adding worker went well true; otherwise false</returns>
@@ -115,7 +125,6 @@ namespace management_system.app.entity
             SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
 
-            _database.Open();
 
             command.Parameters.AddWithValue("@name", worker.Name);
             backupCommand.Parameters.AddWithValue("@name", worker.Name);
@@ -132,11 +141,13 @@ namespace management_system.app.entity
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();
 
-            _database.Close();
 
             return true;
         }
 
+        ///<summary>
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
         /// <param name="id">Supplier id</param>
         /// <returns>If the supplier exists it returns his object; otherwise null</returns>
         public Supplier GetSupplier(int id)
@@ -150,11 +161,15 @@ namespace management_system.app.entity
                 return null;
 
             Supplier supplier = new Supplier(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}");
-            _update.Add(supplier);
+            _update.Add(() =>
+                {
+
+                });
             return supplier;
         }
         /// <summary>
         /// Add supplier to database
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <param name="supplier">Supplier object</param>
         /// <returns>If adding supplier went well true; otherwise false</returns>
@@ -169,7 +184,6 @@ namespace management_system.app.entity
             SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
 
-            _database.Open();
 
             command.Parameters.AddWithValue("@name", supplier.Name);
             backupCommand.Parameters.AddWithValue("@name", supplier.Name);
@@ -180,12 +194,13 @@ namespace management_system.app.entity
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();
 
-            _database.Close();
-
             return true;
         }
 
 
+        ///<summary>
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
         /// <param name="id">Order id</param>
         /// <returns>If the order exists it returns his object; otherwise null</returns>
         public Order GetOrder(int id)
@@ -199,11 +214,15 @@ namespace management_system.app.entity
                 return null;
 
             Order order = new Order(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToDateTime(reader[4]), Convert.ToBoolean(reader[5]));
-            _update.Add(order);
+            _update.Add(() =>
+                {
+
+                });
             return order;
         }
         /// <summary>
         /// Add order to database
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <param name="order">Order object</param>
         /// <returns>If adding order went well true; otherwise false</returns>
@@ -218,7 +237,6 @@ namespace management_system.app.entity
             SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
 
-            _database.Open();
 
             command.Parameters.AddWithValue("@supplier_id", order.SupplierId);
             backupCommand.Parameters.AddWithValue("@supplier_id", order.SupplierId);
@@ -238,11 +256,13 @@ namespace management_system.app.entity
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();
 
-            _database.Close();
 
             return true;
         }
 
+        ///<summary>
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
         /// <param name="id">Extraction id</param>
         /// <returns>If the extraction exists it returns his object; otherwise null</returns>
         public Extraction GetExtraction(int id)
@@ -256,11 +276,15 @@ namespace management_system.app.entity
                 return null;
 
             Extraction extraction = new Extraction(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]));
-            _update.Add(extraction);
+            _update.Add(() =>
+                {
+
+                });
             return extraction;
         }
         /// <summary>
         /// Add extraction to database
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <param name="extraction">Extraction object</param>
         /// <returns>If adding extraction went well true; otherwise false</returns>
@@ -275,7 +299,6 @@ namespace management_system.app.entity
             SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
 
-            _database.Open();
 
             command.Parameters.AddWithValue("@worker_id", extraction.WorkerId);
             backupCommand.Parameters.AddWithValue("@worker_id", extraction.WorkerId);
@@ -292,11 +315,13 @@ namespace management_system.app.entity
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();
 
-            _database.Close();
 
             return true;
         }
 
+        ///<summary>
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
         /// <param name="id">Tag id</param>
         /// <returns>If the tag exists it returns his object; otherwise null</returns>
         public Tag GetTag(int id)
@@ -310,11 +335,15 @@ namespace management_system.app.entity
                 return null;
 
             Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
-            _update.Add(tag);
+            _update.Add(() =>
+                {
+
+                });
             return tag;
         }
         /// <summary>
         /// Add tag to database
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <param name="tag">Tag object</param>
         /// <returns>If adding tag went well true; otherwise false</returns>
@@ -329,7 +358,6 @@ namespace management_system.app.entity
             SQLiteCommand command = new SQLiteCommand(query, _database.Connection);
             SQLiteCommand backupCommand = new SQLiteCommand(query, _database.BackupConnection);
 
-            _database.Open();
 
             command.Parameters.AddWithValue("@name", tag.Name);
             backupCommand.Parameters.AddWithValue("@name", tag.Name);
@@ -340,11 +368,13 @@ namespace management_system.app.entity
             command.ExecuteNonQuery();
             backupCommand.ExecuteNonQuery();
 
-            _database.Close();
 
             return true;
         }
 
+        ///<summary>
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
         /// <param name="id">Item id</param>
         /// <returns>If the item exists and has tags, returns the list of its tags; otherwise null</returns>
         public List<Tag> GetItemTags(int id)
@@ -358,7 +388,10 @@ namespace management_system.app.entity
             while (reader.Read())
             {
                 Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
-                _update.Add(tag);
+                _update.Add(() =>
+                    {
+
+                    });
                 tags.Add(tag);
             }
 
@@ -367,11 +400,16 @@ namespace management_system.app.entity
 
             return tags;
         }
+        ///<summary>
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
         /// <param name="item">Item object</param>
         /// <returns>If the item exists and has tags, returns the list of its tags; otherwise null</returns>
         public List<Tag> GetItemTags(Item item) => GetItemTags(item.Id);
 
-
+        ///<summary>
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
         /// <param name="id">Item id</param>
         /// <returns>If the item exists it returns his object; otherwise null</returns>
         public Item GetItem(int id)
@@ -385,18 +423,20 @@ namespace management_system.app.entity
                 return null;
 
             Item item = new Item(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]), GetItemTags(Convert.ToInt32(reader[0])));
-            _update.Add(item);
+            _update.Add(() =>
+                {
+
+                });
             return item;
         }
         /// <summary>
         /// Add item to database
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <param name="item">Item object</param>
         /// <returns>If adding item went well true; otherwise false</returns>
         public bool AddItem(Item item)
         {
-            if (GetItem(item.Id) != null)
-                return false;
 
             string query =
                 "INSERT INTO items ('name', 'amount', 'min_amount', 'price') VALUES (@name, @amount, @min, @price)";
@@ -404,7 +444,9 @@ namespace management_system.app.entity
             SQLiteCommand addCommand = new SQLiteCommand(query, _database.Connection);
             SQLiteCommand addBackupCommand = new SQLiteCommand(query, _database.BackupConnection);
 
-            _database.Open();
+
+            if (GetItem(item.Id) != null)
+                return false;
 
             addCommand.Parameters.AddWithValue("@name", item.Name);
             addBackupCommand.Parameters.AddWithValue("@name", item.Name);
@@ -421,13 +463,11 @@ namespace management_system.app.entity
             addCommand.ExecuteNonQuery();
             addBackupCommand.ExecuteNonQuery();
 
-            _database.Close();
 
             foreach (Tag tag in item.Tags)
                 AddTag(tag);
 
             return true;
         }
-
     }
 }
