@@ -5,13 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:management_system.app.views.Controls.SearchBox"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="765.374">
     <Grid>
         <TextBox Name="SearchBar" 
-                 Width="600" Height="40" Margin="0, 20, 0, 0"
-                 HorizontalAlignment="Center" VerticalAlignment="Top" Padding="30,5"
+                 Width="600" Height="40" Margin="25,20,0,0"
+                 HorizontalAlignment="Left" VerticalAlignment="Top" Padding="30,5" 
                  FontSize="20">
-            Search
         </TextBox>
+        <Button Name="SearchBtn" Margin="645,20,20,240"
+            Width="100" Height="40" Click="SearchAction">
+            Search
+        </Button>
     </Grid>
 </UserControl>
