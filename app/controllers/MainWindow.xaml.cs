@@ -2,6 +2,7 @@
 using System;
 using System.Data.SQLite;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace management_system
 {
@@ -10,9 +11,11 @@ namespace management_system
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ListView dataListView;
         public MainWindow()
         {
             InitializeComponent();
+            dataListView = DataListView;
         }
 
         private void ShowWorkers(object sender, RoutedEventArgs e)
@@ -57,6 +60,29 @@ namespace management_system
             }
             
             db.Close();
+        }
+
+        public void ShowResults(object sender, RoutedEventArgs e, SQLiteDataReader dataReader)
+        {
+            
+        }
+
+        private void SearchAction(object sender, RoutedEventArgs e)
+        {
+            Database db = new Database();
+
+            string prahse = $"SELECT * FROM items WHERE name LIKE '%{SearchBar.Text}%'";
+            SQLiteCommand cmd = new SQLiteCommand(prahse, db.Connection);
+
+            db.Open();
+            SQLiteDataReader dataReader = cmd.ExecuteReader();
+            DataListView.Items.Clear();
+            while (dataReader.Read())
+            {
+                DataListView.Items.Add($"{dataReader[0]} {dataReader[1]} {dataReader[2]}");
+            }
+            db.Close();
+
         }
     }
 }

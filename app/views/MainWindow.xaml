@@ -7,12 +7,16 @@
         mc:Ignorable="d"
         Title="Warehouse Management System">
     <Grid Height="711" Width="1471">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="341*"/>
+            <RowDefinition Height="370*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Image HorizontalAlignment="Left" Height="124" Margin="-8,-4,0,0" VerticalAlignment="Top" Width="397" Source="/src/img/logo/dark_logo_transparent_background.png" Grid.ColumnSpan="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="711" VerticalAlignment="Center" Width="314" Fill="#194988EC" Grid.ColumnSpan="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="711" VerticalAlignment="Top" Width="314" Fill="#194988EC" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
         <Rectangle HorizontalAlignment="Center" Height="115" VerticalAlignment="Top" Width="1472" Fill="#194988EC" Grid.Column="1"/>
         <Button x:Name="ButtonItems" Background="#4CE3F9FF" 
                 Width="250" Height="30" Margin="32,140,0,0"
@@ -28,12 +32,21 @@
         </Button>
         <ListView Name="DataListView" 
             Width="949" Height="456" Margin="0,0,100,65" 
-            HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Background="{x:Null}">
+            HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Background="{x:Null}" Grid.RowSpan="2">
             Hello, Sir. Have a nice day!
         </ListView>
         <Button x:Name="ButtonWorkers" Background="#4CE3F9FF" 
                 Width="250" Height="30" Margin="32,175,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Click="ShowWorkers" Content="Workers" Grid.ColumnSpan="2" FontFamily="Yu Gothic"/>
+
+        <TextBox Name="SearchBar" 
+                 Width="726" Height="40" Margin="446,38,0,0"
+                 HorizontalAlignment="Left" VerticalAlignment="Top" Padding="30,5" 
+                 FontSize="20" Grid.ColumnSpan="2">
+        </TextBox>
+        <Button Name="SearchBtn" Margin="1192,38,141,263" Padding="30,5" Click="SearchAction" Grid.ColumnSpan="2">
+            Search
+        </Button>
     </Grid>
 </Window>
