@@ -11,7 +11,7 @@ namespace management_system
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string currPage = "";
+        private string currPage = "items";
         public MainWindow()
         {
             InitializeComponent();
@@ -53,6 +53,37 @@ namespace management_system
             db.Close();
         }
 
+        private void SearchAction(object sender, RoutedEventArgs e)
+        {
+            Database db = new Database();
+            db.Open();
+
+            string query = $"SELECT * FROM {currPage} ";
+            SQLiteCommand cmd = new SQLiteCommand(query, db.Connection);
+
+            SQLiteDataReader dataReader = cmd.ExecuteReader();
+            query += "WHERE ";
+
+            int max = 0;
+            for (int i = 0; i < dataReader.FieldCount; i++) { max++; }
+
+            foreach (var col in dataReader.GetValues())
+            {
+                query += $"{col} LIKE '%{SearchBar.Text}%' ";
+                if (--max != 0)
+                {
+                    query += "OR ";
+                }
+            }
+
+            cmd = new SQLiteCommand(query, db.Connection);
+            dataReader = cmd.ExecuteReader();
+            ShowResults(sender, e, dataReader);
+
+            db.Close();
+
+        }
+
         public void ShowResults(object sender, RoutedEventArgs e, SQLiteDataReader dataReader)
         {
             DataListView.Items.Clear();
@@ -65,20 +96,6 @@ namespace management_system
                 }
                 DataListView.Items.Add(query);
             }
-        }
-
-        private void SearchAction(object sender, RoutedEventArgs e)
-        {
-            Database db = new Database();
-
-            string prahse = $"SELECT * FROM {currPage} WHERE name LIKE '%{SearchBar.Text}%'";
-            SQLiteCommand cmd = new SQLiteCommand(prahse, db.Connection);
-
-            db.Open();
-            SQLiteDataReader dataReader = cmd.ExecuteReader();
-            ShowResults(sender, e, dataReader);
-            db.Close();
-
         }
     }
 }
