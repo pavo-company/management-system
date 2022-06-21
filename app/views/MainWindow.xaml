@@ -42,7 +42,7 @@
 
         <TextBox Name="SearchBar" 
                  Width="726" Height="40" Margin="446,38,0,0"
-                 HorizontalAlignment="Left" VerticalAlignment="Top" Padding="30,5" 
+                 HorizontalAlignment="Left" VerticalAlignment="Top" Padding="16,5,16,0"
                  FontSize="20" Grid.ColumnSpan="2">
         </TextBox>
         <Button Name="SearchBtn" Margin="1192,38,141,263" Padding="30,5" Click="SearchAction" Grid.ColumnSpan="2">

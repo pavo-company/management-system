@@ -11,76 +11,72 @@ namespace management_system
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ListView dataListView;
+        private string currPage = "";
         public MainWindow()
         {
             InitializeComponent();
-            dataListView = DataListView;
+            this.WindowState = WindowState.Maximized;
         }
 
         private void ShowWorkers(object sender, RoutedEventArgs e)
         {
+            currPage = "workers";
             Database db = new Database();
             db.Open();
             SQLiteDataReader dataReader = db.GetAllData("workers");
 
-            DataListView.Items.Clear();
-            while (dataReader.Read())
-            {
-                DataListView.Items.Add($"{dataReader[0]} {dataReader[1]} {dataReader[2]}");
-            }
+            ShowResults(sender, e, dataReader);
             db.Close();
         }
 
         private void ShowItems(object sender, RoutedEventArgs e)
         {
+            currPage = "items";
             Database db = new Database();
             db.Open();
             SQLiteDataReader dataReader = db.GetAllData("items");
 
-            DataListView.Items.Clear();
-            while (dataReader.Read())
-            {
-                DataListView.Items.Add($"{dataReader[0]} {dataReader[1]} {dataReader[2]}");
-            }
-            
+            ShowResults(sender, e, dataReader);
+
             db.Close();
         }
 
         private void ShowOrders(object sender, RoutedEventArgs e)
         {
+            currPage = "orders";
             Database db = new Database();
             db.Open();
             SQLiteDataReader dataReader = db.GetAllData("orders");
 
-            DataListView.Items.Clear();
-            while (dataReader.Read())
-            {
-                DataListView.Items.Add(String.Format($"{dataReader[0]} {dataReader[1]} {dataReader[2]}"));
-            }
+            ShowResults(sender, e, dataReader);
             
             db.Close();
         }
 
         public void ShowResults(object sender, RoutedEventArgs e, SQLiteDataReader dataReader)
         {
-            
+            DataListView.Items.Clear();
+            while (dataReader.Read())
+            {
+                string query = "";
+                foreach (var el in dataReader.GetValues()) 
+                {
+                    query += dataReader[el.ToString()] + " ";
+                }
+                DataListView.Items.Add(query);
+            }
         }
 
         private void SearchAction(object sender, RoutedEventArgs e)
         {
             Database db = new Database();
 
-            string prahse = $"SELECT * FROM items WHERE name LIKE '%{SearchBar.Text}%'";
+            string prahse = $"SELECT * FROM {currPage} WHERE name LIKE '%{SearchBar.Text}%'";
             SQLiteCommand cmd = new SQLiteCommand(prahse, db.Connection);
 
             db.Open();
             SQLiteDataReader dataReader = cmd.ExecuteReader();
-            DataListView.Items.Clear();
-            while (dataReader.Read())
-            {
-                DataListView.Items.Add($"{dataReader[0]} {dataReader[1]} {dataReader[2]}");
-            }
+            ShowResults(sender, e, dataReader);
             db.Close();
 
         }
