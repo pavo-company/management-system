@@ -16,6 +16,50 @@ namespace management_system.app.entity
         }
 
         /// <summary>
+        /// Update {columns} in {tableName}
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
+        /// <returns>If everything went well true; otherwise false</returns>
+        private bool UpdateTable(string tableName, string[] columns, string[] args, int id)
+        {
+            string col = "";
+
+            if (columns.Length != args.Length)
+                return false;
+
+            for (int i = 0; i < columns.Length; i++)
+            {
+                col += $"{columns[i]} = {args[i]}, ";
+            }
+
+            string updateQuery = $"UPDATE {tableName} SET {col.Substring(0, col.Length - 2)} WHERE id = {id};";
+
+            SQLiteCommand updateCommand = new SQLiteCommand(updateQuery, _database.Connection);
+            SQLiteCommand updateBackupCommand = new SQLiteCommand(updateQuery, _database.BackupConnection);
+
+            int res = updateCommand.ExecuteNonQuery();
+            res += updateBackupCommand.ExecuteNonQuery();
+            return res != 0;
+        }
+        /// <summary>
+        /// Creates a lambda expression that checks if an entity has changed.
+        /// If so, it updates it in the database.
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
+        private void LambdaExpressionUpdate(string[] values, Func<string[]> getArgs, Action update)
+        {
+            string[] args = getArgs();
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (values[i] != args[i])
+                {
+                    update();
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
         /// Updates the database of changed entities that were retrieved by EntityManager or added manually.
         /// When finished, clears the list and doesn't see the new changes (you have to add the entities again manually).
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
@@ -29,29 +73,6 @@ namespace management_system.app.entity
             _update.Clear();
             return true;
         }
-
-        private bool Update(string tableName, string[] columns, string[] args, int id)
-        {
-            string col = "";
-
-            if (columns.Length != args.Length)
-                return false;
-
-            for(int i = 0; i < columns.Length; i++)
-            {
-                col += $"{columns[i]} = {args[i]}, ";
-            }
-
-            string updateQuery = $"UPDATE {tableName} SET {col.Substring(0, col.Length-2)} WHERE id = {id};";
-
-            SQLiteCommand updateCommand = new SQLiteCommand(updateQuery, _database.Connection);
-            SQLiteCommand updateBackupCommand = new SQLiteCommand(updateQuery, _database.BackupConnection);
-
-            int res = updateCommand.ExecuteNonQuery();
-            res += updateBackupCommand.ExecuteNonQuery();
-            return res != 0;
-        }
-
 
         ///<summary>
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
@@ -69,18 +90,9 @@ namespace management_system.app.entity
                 return null;
 
             User user = new User(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[3]}");
-            _update.Add(() =>
-                {
-                    string[] values = user.DatabaseColumnValues();
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if(values[i] != $"{reader[i]}")
-                        {
-                            UpdateUser(user);
-                            break;
-                        }
-                    }
-                });
+            _update.Add(() => LambdaExpressionUpdate(new string[] {$"{reader[1]}", $"{reader[2]}", $"{reader[3]}" },
+                                                    () => user.DatabaseColumnValues(),
+                                                    () => UpdateUser(user)));
             return user;
         }
         /// <summary>
@@ -121,7 +133,7 @@ namespace management_system.app.entity
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <returns>If everything went well true; otherwise false</returns>
-        public bool UpdateUser(User user) => Update("users",
+        public bool UpdateUser(User user) => UpdateTable("users",
                                                     user.DatabaseColumnNames(),
                                                     user.DatabaseColumnValues(),
                                                     user.Id);
@@ -142,18 +154,9 @@ namespace management_system.app.entity
                 return null;
 
             Worker worker = new Worker(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[4]}", Convert.ToInt32(reader[3]));
-            _update.Add(() =>
-                {
-                    string[] values = worker.DatabaseColumnValues();
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != $"{reader[i]}")
-                        {
-                            UpdateWorker(worker);
-                            break;
-                        }
-                    }
-                });
+            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[4]}", $"{reader[3]}" },
+                                                    () => worker.DatabaseColumnValues(),
+                                                    () => UpdateWorker(worker)));
             return worker;
         }
         /// <summary>
@@ -197,7 +200,7 @@ namespace management_system.app.entity
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <returns>If everything went well true; otherwise false</returns>
-        public bool UpdateWorker(Worker worker) => Update("workers",
+        public bool UpdateWorker(Worker worker) => UpdateTable("workers",
                                                            worker.DatabaseColumnNames(),
                                                            worker.DatabaseColumnValues(),
                                                            worker.Id);
@@ -218,10 +221,9 @@ namespace management_system.app.entity
                 return null;
 
             Supplier supplier = new Supplier(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}");
-            _update.Add(() =>
-                {
-
-                });
+            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}"},
+                                                    () => supplier.DatabaseColumnValues(),
+                                                    () => UpdateSupplier(supplier)));
             return supplier;
         }
         /// <summary>
@@ -258,7 +260,7 @@ namespace management_system.app.entity
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <returns>If everything went well true; otherwise false</returns>
-        public bool UpdateSupplier(Supplier supplier) => Update("suppliers",
+        public bool UpdateSupplier(Supplier supplier) => UpdateTable("suppliers",
                                                                 supplier.DatabaseColumnNames(),
                                                                 supplier.DatabaseColumnValues(),
                                                                 supplier.Id);
@@ -279,18 +281,9 @@ namespace management_system.app.entity
                 return null;
 
             Order order = new Order(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToDateTime(reader[4]), Convert.ToBoolean(reader[5]));
-            _update.Add(() =>
-                {
-                    string[] values = order.DatabaseColumnValues();
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != $"{reader[i]}")
-                        {
-                            UpdateOrder(order);
-                            break;
-                        }
-                    }
-                });
+            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[3]}", $"{reader[4]}", $"{reader[5]}" },
+                                                    () => order.DatabaseColumnValues(),
+                                                    () => UpdateOrder(order)));
             return order;
         }
         /// <summary>
@@ -337,7 +330,7 @@ namespace management_system.app.entity
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <returns>If everything went well true; otherwise false</returns>
-        public bool UpdateOrder(Order order) => Update("orders",
+        public bool UpdateOrder(Order order) => UpdateTable("orders",
                                                         order.DatabaseColumnNames(),
                                                         order.DatabaseColumnValues(),
                                                         order.Id);
@@ -358,18 +351,9 @@ namespace management_system.app.entity
                 return null;
 
             Extraction extraction = new Extraction(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]));
-            _update.Add(() =>
-                {
-                    string[] values = extraction.DatabaseColumnValues();
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != $"{reader[i]}")
-                        {
-                            UpdateExtraction(extraction);
-                            break;
-                        }
-                    }
-                });
+            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[3]}", $"{reader[4]}"},
+                                                    () => extraction.DatabaseColumnValues(),
+                                                    () => UpdateExtraction(extraction)));
             return extraction;
         }
         /// <summary>
@@ -413,7 +397,7 @@ namespace management_system.app.entity
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <returns>If everything went well true; otherwise false</returns>
-        public bool UpdateExtraction(Extraction extraction) => Update("extractions",
+        public bool UpdateExtraction(Extraction extraction) => UpdateTable("extractions",
                                                                        extraction.DatabaseColumnNames(),
                                                                        extraction.DatabaseColumnValues(),
                                                                        extraction.Id);
@@ -434,18 +418,9 @@ namespace management_system.app.entity
                 return null;
 
             Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
-            _update.Add(() =>
-                {
-                    string[] values = tag.DatabaseColumnValues();
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != $"{reader[i]}")
-                        {
-                            UpdateTag(tag);
-                            break;
-                        }
-                    }
-                });
+            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}"},
+                                                    () => tag.DatabaseColumnValues(),
+                                                    () => UpdateTag(tag)));
             return tag;
         }
         /// <summary>
@@ -483,7 +458,7 @@ namespace management_system.app.entity
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <returns>If everything went well true; otherwise false</returns>
-        public bool UpdateTag(Tag tag) => Update("tags",
+        public bool UpdateTag(Tag tag) => UpdateTable("tags",
                                                   tag.DatabaseColumnNames(),
                                                   tag.DatabaseColumnValues(),
                                                   tag.Id);
@@ -504,18 +479,9 @@ namespace management_system.app.entity
             while (reader.Read())
             {
                 Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
-                _update.Add(() =>
-                    {
-                        string[] values = tag.DatabaseColumnValues();
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (values[i] != $"{reader[i]}")
-                            {
-                                UpdateTag(tag);
-                                break;
-                            }
-                        }
-                    });
+                _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}" },
+                                                        () => tag.DatabaseColumnValues(),
+                                                        () => UpdateTag(tag)));
                 tags.Add(tag);
             }
 
@@ -547,18 +513,10 @@ namespace management_system.app.entity
                 return null;
 
             Item item = new Item(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]), GetItemTags(Convert.ToInt32(reader[0])));
-            _update.Add(() =>
-                {
-                    string[] values = item.DatabaseColumnValues();
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != $"{reader[i]}")
-                        {
-                            UpdateItem(item);
-                            break;
-                        }
-                    }
-                });
+
+            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[2]}", $"{reader[3]}", $"{reader[4]}" },
+                                                    () => item.DatabaseColumnValues(),
+                                                    () => UpdateItem(item)));
             return item;
         }
         /// <summary>
@@ -606,7 +564,7 @@ namespace management_system.app.entity
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <returns>If everything went well true; otherwise false</returns>
-        public bool UpdateItem(Item item) => Update("items",
+        public bool UpdateItem(Item item) => UpdateTable("items",
                                                      item.DatabaseColumnNames(),
                                                      item.DatabaseColumnValues(),
                                                      item.Id);
