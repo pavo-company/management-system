@@ -1,13 +1,16 @@
-﻿using System;
+﻿using management_system.app.entity;
+using System;
 using System.Data.SQLite;
 
 namespace management_system
 {
-    public class Tag
+    public class Tag : Entity
     {
         public int Id { get; }
         public string Name { get; set; }
         public int ItemId { get; set; }
+        public string[] DatabaseColumnNames() => new string[] { "name", "item_id" };
+        public string[] DatabaseColumnValues() => new string[] { $"'{Name}'", $"'{ItemId}'" };
 
         public Tag(string name, int itemId)
         {
@@ -24,5 +27,6 @@ namespace management_system
         }
 
         public void AddToDatabase(Database db) => db.em.AddTag(this);
+        public void UpdateDatabase(Database db) => db.em.UpdateTag(this);
     }
 }

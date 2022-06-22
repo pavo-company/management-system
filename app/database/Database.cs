@@ -90,8 +90,8 @@ namespace management_system
             
             if (!tables.Contains("orders"))
             {
-                string createOrdersTable = 
-                    "create table orders (id INTEGER PRIMARY KEY AUTOINCREMENT,  supplier_id TEXT, item_id INTEGER, amount INTEGER, date TEXT, is_cyclic NUMERIC(1)," + 
+                string createOrdersTable =
+                    "create table orders (id INTEGER PRIMARY KEY AUTOINCREMENT,  supplier_id INTEGER, item_id INTEGER, amount INTEGER, date TEXT, is_cyclic NUMERIC(1)," + 
                     "FOREIGN KEY (supplier_id) REFERENCES suppliers(id), FOREIGN KEY (item_id) REFERENCES items(id));";
                 SQLiteCommand addOrdersTab = new SQLiteCommand(createOrdersTable, connection);
                 addOrdersTab.ExecuteNonQuery();

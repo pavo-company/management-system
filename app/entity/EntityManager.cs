@@ -16,7 +16,8 @@ namespace management_system.app.entity
         }
 
         /// <summary>
-        /// Updates all changed entities
+        /// Updates the database of changed entities that were retrieved by EntityManager or added manually.
+        /// When finished, clears the list and doesn't see the new changes (you have to add the entities again manually).
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
         /// <returns>If everything went well true; otherwise false</returns>
@@ -27,6 +28,28 @@ namespace management_system.app.entity
 
             _update.Clear();
             return true;
+        }
+
+        private bool Update(string tableName, string[] columns, string[] args, int id)
+        {
+            string col = "";
+
+            if (columns.Length != args.Length)
+                return false;
+
+            for(int i = 0; i < columns.Length; i++)
+            {
+                col += $"{columns[i]} = {args[i]}, ";
+            }
+
+            string updateQuery = $"UPDATE {tableName} SET {col.Substring(0, col.Length-2)} WHERE id = {id};";
+
+            SQLiteCommand updateCommand = new SQLiteCommand(updateQuery, _database.Connection);
+            SQLiteCommand updateBackupCommand = new SQLiteCommand(updateQuery, _database.BackupConnection);
+
+            int res = updateCommand.ExecuteNonQuery();
+            res += updateBackupCommand.ExecuteNonQuery();
+            return res != 0;
         }
 
 
@@ -85,6 +108,10 @@ namespace management_system.app.entity
 
             return true;
         }
+        public bool UpdateUser(User user) => Update("users",
+                                                    user.DatabaseColumnNames(),
+                                                    user.DatabaseColumnValues(),
+                                                    user.Id);
 
         ///<summary>
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
@@ -144,6 +171,10 @@ namespace management_system.app.entity
 
             return true;
         }
+        public bool UpdateWorker(Worker worker) => Update("workers",
+                                                           worker.DatabaseColumnNames(),
+                                                           worker.DatabaseColumnValues(),
+                                                           worker.Id);
 
         ///<summary>
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
@@ -196,7 +227,10 @@ namespace management_system.app.entity
 
             return true;
         }
-
+        public bool UpdateSupplier(Supplier supplier) => Update("suppliers",
+                                                                supplier.DatabaseColumnNames(),
+                                                                supplier.DatabaseColumnValues(),
+                                                                supplier.Id);
 
         ///<summary>
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
@@ -260,6 +294,11 @@ namespace management_system.app.entity
             return true;
         }
 
+        public bool UpdateOrder(Order order) => Update("orders",
+                                                        order.DatabaseColumnNames(),
+                                                        order.DatabaseColumnValues(),
+                                                        order.Id);
+
         ///<summary>
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
@@ -319,6 +358,11 @@ namespace management_system.app.entity
             return true;
         }
 
+        public bool UpdateExtraction(Extraction extraction) => Update("extractions",
+                                                                       extraction.DatabaseColumnNames(),
+                                                                       extraction.DatabaseColumnValues(),
+                                                                       extraction.Id);
+
         ///<summary>
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
@@ -371,6 +415,10 @@ namespace management_system.app.entity
 
             return true;
         }
+        public bool UpdateTag(Tag tag) => Update("tags",
+                                                  tag.DatabaseColumnNames(),
+                                                  tag.DatabaseColumnValues(),
+                                                  tag.Id);
 
         ///<summary>
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
@@ -469,5 +517,10 @@ namespace management_system.app.entity
 
             return true;
         }
+
+        public bool UpdateItem(Item item) => Update("items",
+                                                     item.DatabaseColumnNames(),
+                                                     item.DatabaseColumnValues(),
+                                                     item.Id);
     }
 }

@@ -1,11 +1,14 @@
-﻿using System;
+﻿using management_system.app.entity;
+using System;
 using System.Data.SQLite;
 
 namespace management_system
 {
-    public class User : Person
+    public class User : Person, Entity
     {
-         
+        public string[] DatabaseColumnNames() => new string[] { "name", "surname", "tin" };
+        public string[] DatabaseColumnValues() => new string[] { $"'{Name}'", $"'{Surname}'", $"'{Tin}'" };
+
         public User(string name, string surname, string tin)
         {
             Id = -1;
@@ -24,6 +27,7 @@ namespace management_system
         public override string ToString() => $"User:\tName: {Name}\tTin: {Tin}";
 
         public void AddToDatabase(Database db) => db.em.AddUser(this);
+        public void UpdateDatabase(Database db) => db.em.UpdateUser(this);
 
     }
 }

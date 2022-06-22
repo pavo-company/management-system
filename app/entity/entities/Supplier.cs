@@ -1,8 +1,9 @@
-﻿using System.Data.SQLite;
+﻿using management_system.app.entity;
+using System.Data.SQLite;
 
 namespace management_system
 {
-    public class Supplier : Person
+    public class Supplier : Person, Entity
     {
         public Supplier(string name, string tin)
         {
@@ -16,7 +17,10 @@ namespace management_system
             Name = name;
             Tin = tin;
         }
+        public string[] DatabaseColumnNames() => new string[] { "name", "tin" };
+        public string[] DatabaseColumnValues() => new string[] { $"'{Name}'", $"'{Tin}'" };
 
         public void AddToDatabase(Database db) => db.em.AddSupplier(this);
+        public void UpdateDatabase(Database db) => db.em.UpdateSupplier(this);
     }
 }
