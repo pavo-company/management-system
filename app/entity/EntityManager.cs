@@ -71,7 +71,15 @@ namespace management_system.app.entity
             User user = new User(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[3]}");
             _update.Add(() =>
                 {
-
+                    string[] values = user.DatabaseColumnValues();
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        if(values[i] != $"{reader[i]}")
+                        {
+                            UpdateUser(user);
+                            break;
+                        }
+                    }
                 });
             return user;
         }
@@ -108,6 +116,11 @@ namespace management_system.app.entity
 
             return true;
         }
+        /// <summary>
+        /// Updates the database of changed user entity.
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
+        /// <returns>If everything went well true; otherwise false</returns>
         public bool UpdateUser(User user) => Update("users",
                                                     user.DatabaseColumnNames(),
                                                     user.DatabaseColumnValues(),
@@ -131,7 +144,15 @@ namespace management_system.app.entity
             Worker worker = new Worker(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[4]}", Convert.ToInt32(reader[3]));
             _update.Add(() =>
                 {
-
+                    string[] values = worker.DatabaseColumnValues();
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        if (values[i] != $"{reader[i]}")
+                        {
+                            UpdateWorker(worker);
+                            break;
+                        }
+                    }
                 });
             return worker;
         }
@@ -171,6 +192,11 @@ namespace management_system.app.entity
 
             return true;
         }
+        /// <summary>
+        /// Updates the database of changed worker entity.
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
+        /// <returns>If everything went well true; otherwise false</returns>
         public bool UpdateWorker(Worker worker) => Update("workers",
                                                            worker.DatabaseColumnNames(),
                                                            worker.DatabaseColumnValues(),
@@ -227,6 +253,11 @@ namespace management_system.app.entity
 
             return true;
         }
+        /// <summary>
+        /// Updates the database of changed supplier entity.
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
+        /// <returns>If everything went well true; otherwise false</returns>
         public bool UpdateSupplier(Supplier supplier) => Update("suppliers",
                                                                 supplier.DatabaseColumnNames(),
                                                                 supplier.DatabaseColumnValues(),
@@ -250,7 +281,15 @@ namespace management_system.app.entity
             Order order = new Order(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToDateTime(reader[4]), Convert.ToBoolean(reader[5]));
             _update.Add(() =>
                 {
-
+                    string[] values = order.DatabaseColumnValues();
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        if (values[i] != $"{reader[i]}")
+                        {
+                            UpdateOrder(order);
+                            break;
+                        }
+                    }
                 });
             return order;
         }
@@ -293,7 +332,11 @@ namespace management_system.app.entity
 
             return true;
         }
-
+        /// <summary>
+        /// Updates the database of changed order entity.
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
+        /// <returns>If everything went well true; otherwise false</returns>
         public bool UpdateOrder(Order order) => Update("orders",
                                                         order.DatabaseColumnNames(),
                                                         order.DatabaseColumnValues(),
@@ -317,7 +360,15 @@ namespace management_system.app.entity
             Extraction extraction = new Extraction(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]));
             _update.Add(() =>
                 {
-
+                    string[] values = extraction.DatabaseColumnValues();
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        if (values[i] != $"{reader[i]}")
+                        {
+                            UpdateExtraction(extraction);
+                            break;
+                        }
+                    }
                 });
             return extraction;
         }
@@ -357,7 +408,11 @@ namespace management_system.app.entity
 
             return true;
         }
-
+        /// <summary>
+        /// Updates the database of changed extraction entity.
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
+        /// <returns>If everything went well true; otherwise false</returns>
         public bool UpdateExtraction(Extraction extraction) => Update("extractions",
                                                                        extraction.DatabaseColumnNames(),
                                                                        extraction.DatabaseColumnValues(),
@@ -381,7 +436,15 @@ namespace management_system.app.entity
             Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
             _update.Add(() =>
                 {
-
+                    string[] values = tag.DatabaseColumnValues();
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        if (values[i] != $"{reader[i]}")
+                        {
+                            UpdateTag(tag);
+                            break;
+                        }
+                    }
                 });
             return tag;
         }
@@ -415,6 +478,11 @@ namespace management_system.app.entity
 
             return true;
         }
+        /// <summary>
+        /// Updates the database of changed tag entity.
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
+        /// <returns>If everything went well true; otherwise false</returns>
         public bool UpdateTag(Tag tag) => Update("tags",
                                                   tag.DatabaseColumnNames(),
                                                   tag.DatabaseColumnValues(),
@@ -438,7 +506,15 @@ namespace management_system.app.entity
                 Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
                 _update.Add(() =>
                     {
-
+                        string[] values = tag.DatabaseColumnValues();
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            if (values[i] != $"{reader[i]}")
+                            {
+                                UpdateTag(tag);
+                                break;
+                            }
+                        }
                     });
                 tags.Add(tag);
             }
@@ -473,7 +549,15 @@ namespace management_system.app.entity
             Item item = new Item(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]), GetItemTags(Convert.ToInt32(reader[0])));
             _update.Add(() =>
                 {
-
+                    string[] values = item.DatabaseColumnValues();
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        if (values[i] != $"{reader[i]}")
+                        {
+                            UpdateItem(item);
+                            break;
+                        }
+                    }
                 });
             return item;
         }
@@ -517,7 +601,11 @@ namespace management_system.app.entity
 
             return true;
         }
-
+        /// <summary>
+        /// Updates the database of changed item entity.
+        /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
+        /// </summary>
+        /// <returns>If everything went well true; otherwise false</returns>
         public bool UpdateItem(Item item) => Update("items",
                                                      item.DatabaseColumnNames(),
                                                      item.DatabaseColumnValues(),
