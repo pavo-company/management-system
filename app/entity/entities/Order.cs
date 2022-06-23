@@ -1,9 +1,10 @@
-﻿using System;
+﻿using management_system.app.entity;
+using System;
 using System.Data.SQLite;
 
 namespace management_system
 {
-    public class Order
+    public class Order : Entity
     {
         public int Id { get; init; }
         public int SupplierId { get; set; }
@@ -11,6 +12,8 @@ namespace management_system
         public int Amount { get; set; }
         public DateTime Date { get; set; }
         public bool IsCyclic { get; set; }
+        public string[] DatabaseColumnNames() => new string[] { "supplier_id", "item_id", "amount", "date", "is_cyclic" };
+        public string[] DatabaseColumnValues() => new string[] { $"'{SupplierId}'", $"{ItemId}", $"{Amount}", Date.ToString(), $"{IsCyclic}" };
 
         public Order(int supplierId, int itemId, int amount, bool isCyclic)
         {
@@ -29,37 +32,6 @@ namespace management_system
             Amount = amount;
             Date = date;
             IsCyclic = isCyclic;
-        }
-
-        public void AddToDatabase(Database db)
-        {
-            string query =
-                "INSERT INTO orders ('supplier_id', 'item_id', 'amount', 'date', 'is_cyclic') VALUES (@supplier_id, @item_id, @amount, @date, @is_cyclic)";
-
-            SQLiteCommand command = new SQLiteCommand(query, db.Connection);
-            SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
-
-            db.Open();
-
-            command.Parameters.AddWithValue("@supplier_id", SupplierId);
-            backupCommand.Parameters.AddWithValue("@supplier_id", SupplierId);
-
-            command.Parameters.AddWithValue("@item_id", ItemId);
-            backupCommand.Parameters.AddWithValue("@item_id", ItemId);
-
-            command.Parameters.AddWithValue("@amount", Amount);
-            backupCommand.Parameters.AddWithValue("@amount", Amount);
-
-            command.Parameters.AddWithValue("@date", Date.ToString());
-            backupCommand.Parameters.AddWithValue("@date", Date.ToString());
-
-            command.Parameters.AddWithValue("@is_cyclic", IsCyclic);
-            backupCommand.Parameters.AddWithValue("@is_cyclic", IsCyclic);
-
-            command.ExecuteNonQuery();
-            backupCommand.ExecuteNonQuery();
-
-            db.Close();
         }
 
         public void UpdateDatabaseAfterDate(Database db)
@@ -92,5 +64,7 @@ namespace management_system
             
             db.Close();
         }
+        public void AddToDatabase(Database db) => db.em.AddOrder(this);
+        public void UpdateDatabase(Database db) => db.em.UpdateOrder(this);
     }
 }

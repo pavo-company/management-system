@@ -1,10 +1,11 @@
-﻿using System;
+﻿using management_system.app.entity;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 
 namespace management_system
 {
-    public class Item
+    public class Item : Entity
     {
         public int Id { get; init; }
         public string Name { get; init; }
@@ -12,6 +13,8 @@ namespace management_system
         public int MinAmount { get; set; }
         public int Price { get; set; }
         public List<Tag> Tags { get; set; }
+        public string[] DatabaseColumnNames() => new string[] { "name", "amount", "min_amount", "price" };
+        public string[] DatabaseColumnValues() => new string[] { $"'{Name}'", $"{Amount}", $"{MinAmount}", $"{Price}" };
 
         public Item(string name, int amount, int minAmount, int price, List<Tag> tags)
         {
@@ -33,38 +36,6 @@ namespace management_system
             Tags = tags;
         }
 
-        public void AddToDatabase(Database db)
-        {
-            string query = 
-                "INSERT INTO items ('name', 'amount', 'min_amount', 'price') VALUES (@name, @amount, @min, @price)";
-            
-            SQLiteCommand addCommand = new SQLiteCommand(query, db.Connection);
-            SQLiteCommand addBackupCommand = new SQLiteCommand(query, db.BackupConnection);
-            
-            db.Open();
-
-            addCommand.Parameters.AddWithValue("@name", Name);
-            addBackupCommand.Parameters.AddWithValue("@name", Name);
-            
-            addCommand.Parameters.AddWithValue("@amount", Amount);
-            addBackupCommand.Parameters.AddWithValue("@amount", Amount);
-            
-            addCommand.Parameters.AddWithValue("@min", MinAmount);
-            addBackupCommand.Parameters.AddWithValue("@min", MinAmount);
-
-            addCommand.Parameters.AddWithValue("@price", Price);
-            addBackupCommand.Parameters.AddWithValue("@price", Price);
-
-            addCommand.ExecuteNonQuery();
-            addBackupCommand.ExecuteNonQuery();
-            
-            db.Close();
-
-            foreach (Tag tag in Tags)
-            {
-                tag.AddToDatabase(db);
-            }
-        }
 
         public void ReduceItem(string name, int amount, Database db)
         {
@@ -93,5 +64,8 @@ namespace management_system
         {
             Tags.Remove(tag);
         }
+
+        public void AddToDatabase(Database db) => db.em.AddItem(this);
+        public void UpdateDatabase(Database db) => db.em.UpdateItem(this);
     }
 }

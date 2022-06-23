@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using management_system.app.entity;
 using migrations;
 
 namespace management_system
@@ -13,6 +14,7 @@ namespace management_system
         public SQLiteConnection Connection;
         public SQLiteConnection BackupConnection;
         public Migrations Migration;
+        public EntityManager em;
 
         public Database()
         {
@@ -36,6 +38,8 @@ namespace management_system
             CreateTablesIfNotExists(tables, BackupConnection);
             
             Migration = new Migrations(Connection, BackupConnection);
+
+            em = new EntityManager(this);
             
             Close();
         }
@@ -86,8 +90,8 @@ namespace management_system
             
             if (!tables.Contains("orders"))
             {
-                string createOrdersTable = 
-                    "create table orders (id INTEGER PRIMARY KEY AUTOINCREMENT,  supplier_id TEXT, item_id INTEGER, amount INTEGER, date TEXT, is_cyclic NUMERIC(1)," + 
+                string createOrdersTable =
+                    "create table orders (id INTEGER PRIMARY KEY AUTOINCREMENT,  supplier_id INTEGER, item_id INTEGER, amount INTEGER, date TEXT, is_cyclic NUMERIC(1)," + 
                     "FOREIGN KEY (supplier_id) REFERENCES suppliers(id), FOREIGN KEY (item_id) REFERENCES items(id));";
                 SQLiteCommand addOrdersTab = new SQLiteCommand(createOrdersTable, connection);
                 addOrdersTab.ExecuteNonQuery();

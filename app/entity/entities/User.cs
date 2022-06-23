@@ -1,11 +1,14 @@
-﻿using System;
+﻿using management_system.app.entity;
+using System;
 using System.Data.SQLite;
 
 namespace management_system
 {
-    public class User : Person
+    public class User : Person, Entity
     {
-         
+        public string[] DatabaseColumnNames() => new string[] { "name", "surname", "tin" };
+        public string[] DatabaseColumnValues() => new string[] { $"'{Name}'", $"'{Surname}'", $"'{Tin}'" };
+
         public User(string name, string surname, string tin)
         {
             Id = -1;
@@ -21,35 +24,10 @@ namespace management_system
             Surname = surname;
         }
 
-        public override string ToString()
-        {
-            return $"User:\tName: {Name}\tTin: {Tin}";
-        }
+        public override string ToString() => $"User:\tName: {Name}\tTin: {Tin}";
 
-        public void AddToDatabase(Database db)
-        {
-            string query =
-                "INSERT INTO users ('name', 'surname', 'tin') VALUES (@name, @surname, @tin)";
-
-            SQLiteCommand command = new SQLiteCommand(query, db.Connection);
-            SQLiteCommand backupCommand = new SQLiteCommand(query, db.BackupConnection);
-
-            db.Open();
-
-            command.Parameters.AddWithValue("@name", Name);
-            backupCommand.Parameters.AddWithValue("@name", Name);
-
-            command.Parameters.AddWithValue("@surname", Surname);
-            backupCommand.Parameters.AddWithValue("@surname", Surname);
-
-            command.Parameters.AddWithValue("@tin", Tin);
-            backupCommand.Parameters.AddWithValue("@tin", Tin);
-
-            command.ExecuteNonQuery();
-            backupCommand.ExecuteNonQuery();
-
-            db.Close();
-        }
+        public void AddToDatabase(Database db) => db.em.AddUser(this);
+        public void UpdateDatabase(Database db) => db.em.UpdateUser(this);
 
     }
 }
