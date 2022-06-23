@@ -42,11 +42,11 @@ namespace management_system.app.entity
             return res != 0;
         }
         /// <summary>
-        /// Creates a lambda expression that checks if an entity has changed.
+        /// Check if an entity has changed.
         /// If so, it updates it in the database.
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
-        private void LambdaExpressionUpdate(string[] values, Func<string[]> getArgs, Action update)
+        private void CheckEntityUpdate(string[] values, Func<string[]> getArgs, Action update)
         {
             string[] args = getArgs();
             for (int i = 0; i < values.Length; i++)
@@ -90,7 +90,7 @@ namespace management_system.app.entity
                 return null;
 
             User user = new User(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[3]}");
-            _update.Add(() => LambdaExpressionUpdate(new string[] {$"{reader[1]}", $"{reader[2]}", $"{reader[3]}" },
+            _update.Add(() => CheckEntityUpdate(new string[] {$"{reader[1]}", $"{reader[2]}", $"{reader[3]}" },
                                                     () => user.DatabaseColumnValues(),
                                                     () => UpdateUser(user)));
             return user;
@@ -154,7 +154,7 @@ namespace management_system.app.entity
                 return null;
 
             Worker worker = new Worker(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}", $"{reader[4]}", Convert.ToInt32(reader[3]));
-            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[4]}", $"{reader[3]}" },
+            _update.Add(() => CheckEntityUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[4]}", $"{reader[3]}" },
                                                     () => worker.DatabaseColumnValues(),
                                                     () => UpdateWorker(worker)));
             return worker;
@@ -221,7 +221,7 @@ namespace management_system.app.entity
                 return null;
 
             Supplier supplier = new Supplier(Convert.ToInt32(reader[0]), $"{reader[1]}", $"{reader[2]}");
-            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}"},
+            _update.Add(() => CheckEntityUpdate(new string[] { $"{reader[1]}", $"{reader[2]}"},
                                                     () => supplier.DatabaseColumnValues(),
                                                     () => UpdateSupplier(supplier)));
             return supplier;
@@ -281,7 +281,7 @@ namespace management_system.app.entity
                 return null;
 
             Order order = new Order(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToDateTime(reader[4]), Convert.ToBoolean(reader[5]));
-            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[3]}", $"{reader[4]}", $"{reader[5]}" },
+            _update.Add(() => CheckEntityUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[3]}", $"{reader[4]}", $"{reader[5]}" },
                                                     () => order.DatabaseColumnValues(),
                                                     () => UpdateOrder(order)));
             return order;
@@ -351,7 +351,7 @@ namespace management_system.app.entity
                 return null;
 
             Extraction extraction = new Extraction(Convert.ToInt32(reader[0]), Convert.ToInt32(reader[1]), Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]));
-            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[3]}", $"{reader[4]}"},
+            _update.Add(() => CheckEntityUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[3]}", $"{reader[4]}"},
                                                     () => extraction.DatabaseColumnValues(),
                                                     () => UpdateExtraction(extraction)));
             return extraction;
@@ -418,7 +418,7 @@ namespace management_system.app.entity
                 return null;
 
             Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
-            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}"},
+            _update.Add(() => CheckEntityUpdate(new string[] { $"{reader[1]}", $"{reader[2]}"},
                                                     () => tag.DatabaseColumnValues(),
                                                     () => UpdateTag(tag)));
             return tag;
@@ -479,7 +479,7 @@ namespace management_system.app.entity
             while (reader.Read())
             {
                 Tag tag = new Tag(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]));
-                _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}" },
+                _update.Add(() => CheckEntityUpdate(new string[] { $"{reader[1]}", $"{reader[2]}" },
                                                         () => tag.DatabaseColumnValues(),
                                                         () => UpdateTag(tag)));
                 tags.Add(tag);
@@ -514,7 +514,7 @@ namespace management_system.app.entity
 
             Item item = new Item(Convert.ToInt32(reader[0]), $"{reader[1]}", Convert.ToInt32(reader[2]), Convert.ToInt32(reader[3]), Convert.ToInt32(reader[4]), GetItemTags(Convert.ToInt32(reader[0])));
 
-            _update.Add(() => LambdaExpressionUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[2]}", $"{reader[3]}", $"{reader[4]}" },
+            _update.Add(() => CheckEntityUpdate(new string[] { $"{reader[1]}", $"{reader[2]}", $"{reader[2]}", $"{reader[3]}", $"{reader[4]}" },
                                                     () => item.DatabaseColumnValues(),
                                                     () => UpdateItem(item)));
             return item;
