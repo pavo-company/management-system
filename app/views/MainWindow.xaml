@@ -39,7 +39,7 @@
                 Width="250" Height="30" Margin="32,175,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Click="ShowWorkers" Content="Workers" Grid.ColumnSpan="2" FontFamily="Yu Gothic"/>
-
+        <!-- Search Items -->
         <TextBox Name="SearchBar" 
                  Width="726" Height="40" Margin="446,38,0,0"
                  HorizontalAlignment="Left" VerticalAlignment="Top" Padding="16,5,16,0"
@@ -48,6 +48,15 @@
         </TextBox>
         <Button Name="SearchBtn" Margin="1192,38,141,263" Padding="30,5" Click="SearchAction" Grid.ColumnSpan="2">
             Search
+        </Button>
+        <!-- Add/Generate Buttons -->
+        <Button Grid.ColumnSpan="2" Margin="77,185,1244,135" Grid.Row="1"
+                 Click="AddItem">
+            Add
+        </Button>
+        <Button Grid.ColumnSpan="2" Margin="77,255,1244,65" Grid.Row="1" RenderTransformOrigin="0.19,0.901" 
+                 Click="RenderReport">
+            Render report
         </Button>
     </Grid>
 </Window>
