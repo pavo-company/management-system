@@ -12,15 +12,15 @@ namespace migration.version
         {
             ExecuteQuery(
                 "INSERT INTO orders (supplier_id, item_id, amount, date, is_cyclic) " +
-                "VALUES (1, 2, 3, '30/04/2022', 1)", 
+                "VALUES (1, 2, 3, '30/05/2022', 1)", 
                 connection);
             ExecuteQuery(
                 "INSERT INTO orders (supplier_id, item_id, amount, date, is_cyclic) " +
-                "VALUES (1, 4, 10, '10/05/2022', 0)", 
+                "VALUES (1, 4, 10, '29/05/2022', 0)", 
                 connection);
             ExecuteQuery(
                 "INSERT INTO orders (supplier_id, item_id, amount, date, is_cyclic) " +
-                "VALUES (2, 1, 2, '30/04/2022', 0)", 
+                "VALUES (2, 1, 2, '30/06/2022', 0)", 
                 connection);
             ExecuteQuery(
                 "INSERT INTO orders (supplier_id, item_id, amount, date, is_cyclic) " +
