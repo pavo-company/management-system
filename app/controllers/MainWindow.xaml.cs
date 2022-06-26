@@ -152,5 +152,19 @@ namespace management_system
             tooltip.IsOpen = true;
             tooltip.StaysOpen = false;
         }
+
+        public void RecoverDB(object sender, RoutedEventArgs e)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            File.Delete("../../../data/database.sqlite");
+            File.Copy("../../../data/backup.sqlite", "../../../data/database.sqlite");
+
+            var tooltip = new ToolTip { Content = "Report generated" };
+            FlashMsg.ToolTip = tooltip;
+
+            tooltip.IsOpen = true;
+            tooltip.StaysOpen = false;
+        }
     }
 }

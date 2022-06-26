@@ -48,16 +48,17 @@
         <Button Name="SearchBtn" Margin="1192,38,141,263" Padding="30,5" Click="SearchAction" Grid.ColumnSpan="2">
             Search
         </Button>
-        <Button Grid.ColumnSpan="2" Margin="77,185,1244,135" Grid.Row="1"
-                 >
+        <Button Grid.ColumnSpan="2" Margin="78,177,1243,143" Grid.Row="1">
             Add
         </Button>
-        <Button Grid.ColumnSpan="2" Margin="77,255,1244,65" Grid.Row="1" RenderTransformOrigin="0.19,0.901" 
+        <Button Grid.ColumnSpan="2" Margin="78,232,1243,88" Grid.Row="1" RenderTransformOrigin="0.19,0.901" 
                  Click="RenderReport">
             Render report
         </Button>
-        <TextBox Name="FlashMsg" Height="100" Width="200">
-            
-        </TextBox>
+        <Button Grid.ColumnSpan="2" Margin="78,287,1243,33" Grid.Row="1" RenderTransformOrigin="0.19,0.901" 
+                 Click="RecoverDB">
+            Recover database
+        </Button>
+        <TextBox Name="FlashMsg" Height="100" Width="200"></TextBox>
     </Grid>
 </Window>
