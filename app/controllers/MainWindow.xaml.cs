@@ -1,6 +1,9 @@
 ﻿using management_system.app.entity;
 using System;
 using System.Data.SQLite;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -96,6 +99,58 @@ namespace management_system
                 }
                 DataListView.Items.Add(query);
             }
+        }
+
+        public void RenderReport(object sender, RoutedEventArgs e)
+        {
+            Database db = new Database();
+            db.Open();
+
+            // dd/mm/yyyy
+            DateTime lastMonth = DateTime.Today.AddMonths(-1);
+
+            string query = $"SELECT * FROM orders";
+
+            SQLiteCommand cmd = new SQLiteCommand(query, db.Connection);
+
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            StringBuilder sb = new StringBuilder();
+
+            var columnNames = Enumerable.Range(0, reader.FieldCount)
+                                    .Select(reader.GetName) 
+                                    .ToList();
+
+            sb.Append(string.Join(",", columnNames));
+
+            sb.AppendLine();
+
+            StreamWriter sw = new StreamWriter("../../../report.csv");
+
+            while (reader.Read())
+            {
+                if (Convert.ToDateTime(reader[4]) > lastMonth) {
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        string value = reader[i].ToString();
+                        if (value.Contains(","))
+                            value = "\"" + value + "\"";
+
+                        sb.Append(value.Replace(Environment.NewLine, " ") + ",");
+                    }
+                    sb.Length--;
+                    sb.AppendLine();
+                }
+            }
+
+            sw.Write(sb.ToString());
+            sw.Close();
+            db.Close();
+
+            var tooltip = new ToolTip { Content = "Report generated" };
+            FlashMsg.ToolTip = tooltip;
+
+            tooltip.IsOpen = true;
+            tooltip.StaysOpen = false;
         }
     }
 }
