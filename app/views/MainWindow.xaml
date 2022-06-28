@@ -39,7 +39,6 @@
                 Width="250" Height="30" Margin="32,175,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Click="ShowWorkers" Content="Workers" Grid.ColumnSpan="2" FontFamily="Yu Gothic"/>
-
         <TextBox Name="SearchBar" 
                  Width="726" Height="40" Margin="446,38,0,0"
                  HorizontalAlignment="Left" VerticalAlignment="Top" Padding="16,5,16,0"
@@ -49,5 +48,17 @@
         <Button Name="SearchBtn" Margin="1192,38,141,263" Padding="30,5" Click="SearchAction" Grid.ColumnSpan="2">
             Search
         </Button>
+        <Button Grid.ColumnSpan="2" Margin="78,177,1243,143" Grid.Row="1">
+            Add
+        </Button>
+        <Button Grid.ColumnSpan="2" Margin="78,232,1243,88" Grid.Row="1" RenderTransformOrigin="0.19,0.901" 
+                 Click="RenderReport">
+            Render report
+        </Button>
+        <Button Grid.ColumnSpan="2" Margin="78,287,1243,33" Grid.Row="1" RenderTransformOrigin="0.19,0.901" 
+                 Click="RecoverDB">
+            Recover database
+        </Button>
+        <TextBox Name="FlashMsg" Height="100" Width="200"></TextBox>
     </Grid>
 </Window>
