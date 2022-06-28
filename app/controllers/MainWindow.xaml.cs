@@ -16,6 +16,7 @@ namespace management_system
         {
             InitializeComponent();
             this.WindowState = WindowState.Maximized;
+
         }
 
         private void ShowWorkers(object sender, RoutedEventArgs e)

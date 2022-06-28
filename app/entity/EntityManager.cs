@@ -46,12 +46,12 @@ namespace management_system.app.entity
         /// If so, it updates it in the database.
         /// [THE CONNECTION TO THE DATABASE MUST BE OPEN]
         /// </summary>
-        private void CheckEntityUpdate(string[] values, Func<string[]> getArgs, Action update)
+        private void CheckEntityUpdate(string[] values, Func<string[]> getCurrValues, Action update)
         {
-            string[] args = getArgs();
+            string[] currValues = getCurrValues();
             for (int i = 0; i < values.Length; i++)
             {
-                if (values[i] != args[i])
+                if (values[i] != currValues[i])
                 {
                     update();
                     break;
