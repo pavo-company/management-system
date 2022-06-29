@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace management_system
 {
@@ -14,45 +15,39 @@ namespace management_system
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string currPage = "items";
+        private string currPage;
+
         public MainWindow()
         {
             InitializeComponent();
             this.WindowState = WindowState.Maximized;
         }
 
-        private void ShowWorkers(object sender, RoutedEventArgs e)
+        public void ShowResults(object sender, RoutedEventArgs e, SQLiteDataReader dataReader)
         {
-            currPage = "workers";
-            Database db = new Database();
-            db.Open();
-            SQLiteDataReader dataReader = db.GetAllData("workers");
-
-            ShowResults(sender, e, dataReader);
-            db.Close();
+            DataListView.Items.Clear();
+            while (dataReader.Read())
+            {
+                string query = "";
+                foreach (var el in dataReader.GetValues())
+                {
+                    query += dataReader[el.ToString()] + " ";
+                }
+                DataListView.Items.Add(query);
+            }
         }
 
-        private void ShowItems(object sender, RoutedEventArgs e)
+        private void ShowTable(object sender, RoutedEventArgs e)
         {
-            currPage = "items";
+            var button = sender as Button;
+            currPage = button.Tag.ToString();
+
             Database db = new Database();
             db.Open();
-            SQLiteDataReader dataReader = db.GetAllData("items");
+            SQLiteDataReader dataReader = db.GetAllData(currPage);
 
             ShowResults(sender, e, dataReader);
 
-            db.Close();
-        }
-
-        private void ShowOrders(object sender, RoutedEventArgs e)
-        {
-            currPage = "orders";
-            Database db = new Database();
-            db.Open();
-            SQLiteDataReader dataReader = db.GetAllData("orders");
-
-            ShowResults(sender, e, dataReader);
-            
             db.Close();
         }
 
@@ -67,8 +62,7 @@ namespace management_system
             SQLiteDataReader dataReader = cmd.ExecuteReader();
             query += "WHERE ";
 
-            int max = 0;
-            for (int i = 0; i < dataReader.FieldCount; i++) { max++; }
+            int max = dataReader.FieldCount;
 
             foreach (var col in dataReader.GetValues())
             {
@@ -87,29 +81,19 @@ namespace management_system
 
         }
 
-        public void ShowResults(object sender, RoutedEventArgs e, SQLiteDataReader dataReader)
-        {
-            DataListView.Items.Clear();
-            while (dataReader.Read())
-            {
-                string query = "";
-                foreach (var el in dataReader.GetValues()) 
-                {
-                    query += dataReader[el.ToString()] + " ";
-                }
-                DataListView.Items.Add(query);
-            }
-        }
+
 
         public void RenderReport(object sender, RoutedEventArgs e)
         {
             Database db = new Database();
             db.Open();
+            var button = sender as Button;
+            var page = button.Tag.ToString();
 
             // dd/mm/yyyy
             DateTime lastMonth = DateTime.Today.AddMonths(-1);
 
-            string query = $"SELECT * FROM orders";
+            string query = $"SELECT * FROM {page}";
 
             SQLiteCommand cmd = new SQLiteCommand(query, db.Connection);
 
@@ -124,22 +108,20 @@ namespace management_system
 
             sb.AppendLine();
 
-            StreamWriter sw = new StreamWriter("../../../report.csv");
+            StreamWriter sw = new StreamWriter($"../../../report_{page}_{DateTime.Now.ToString("MM/dd/yyyy_HHmmss")}.csv");
 
             while (reader.Read())
             {
-                if (Convert.ToDateTime(reader[4]) > lastMonth) {
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        string value = reader[i].ToString();
-                        if (value.Contains(","))
-                            value = "\"" + value + "\"";
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    string value = reader[i].ToString();
+                    if (value.Contains(","))
+                        value = "\"" + value + "\"";
 
-                        sb.Append(value.Replace(Environment.NewLine, " ") + ",");
-                    }
-                    sb.Length--;
-                    sb.AppendLine();
+                    sb.Append(value.Replace(Environment.NewLine, " ") + ",");
                 }
+                sb.Length--;
+                sb.AppendLine();
             }
 
             sw.Write(sb.ToString());
@@ -165,6 +147,12 @@ namespace management_system
 
             tooltip.IsOpen = true;
             tooltip.StaysOpen = false;
+        }
+
+        public void AddEntity(object sender, RoutedEventArgs e)
+        {
+            MainWindow win2 = new MainWindow();
+            win2.Show();
         }
     }
 }
