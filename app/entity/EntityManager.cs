@@ -59,6 +59,25 @@ namespace management_system.app.entity
             }
         }
 
+        public List<string> GetAllEntities(string table)
+        {
+            string getUsersDataQuery = $"SELECT * FROM {table}";
+            SQLiteCommand command = new SQLiteCommand(getUsersDataQuery, _database.Connection);
+
+            SQLiteDataReader reader = command.ExecuteReader();
+            List<string> entities = new List<string>();
+            while (reader.Read())
+            {
+                string @string = "";
+                foreach (var el in reader.GetValues())
+                {
+                    @string += reader[el.ToString()] + " ";
+                }
+                entities.Add(@string);
+            }
+            return entities;
+        }
+
         /// <summary>
         /// Updates the database of changed entities that were retrieved by EntityManager or added manually.
         /// When finished, clears the list and doesn't see the new changes (you have to add the entities again manually).

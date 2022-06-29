@@ -26,6 +26,16 @@ namespace management_system
             Tags = tags;
         }
 
+        public Item(string name, int amount, int minAmount, int price)
+        {
+            Id = -1;
+            Name = name;
+            Amount = amount;
+            MinAmount = minAmount;
+            Price = price;
+            Tags = new List<Tag>();
+        }
+
         public Item(int id, string name, int amount, int minAmount, int price, List<Tag> tags)
         {
             Id = id;

@@ -19,26 +19,28 @@
         <Rectangle HorizontalAlignment="Left" Height="711" VerticalAlignment="Top" Width="314" Fill="#194988EC" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
         <Rectangle HorizontalAlignment="Center" Height="115" VerticalAlignment="Top" Width="1472" Fill="#194988EC" Grid.Column="1"/>
         <Button x:Name="ButtonItems" Background="#4CE3F9FF" 
-                Width="250" Height="30" Margin="32,140,0,0"
+                Width="168" Height="30" Margin="32,140,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Click="ShowItems" Grid.ColumnSpan="2" FontFamily="Yu Gothic">
+                Click="ShowTable" Tag="items"  Grid.ColumnSpan="2" FontFamily="Yu Gothic">
             Items
         </Button>
         <Button x:Name="ButtonOrders" Background="#4CE3F9FF" 
-                Width="250" Height="30" Margin="32,210,0,0"
+                Width="168" Height="30" Margin="32,210,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Click="ShowOrders" Grid.ColumnSpan="2" FontFamily="Yu Gothic">
+                Click="ShowTable"  Tag="orders"  Grid.ColumnSpan="2" FontFamily="Yu Gothic">
             Orders and Extractions
         </Button>
+
         <ListView Name="DataListView" 
-            Width="949" Height="456" Margin="0,0,100,65" 
+            Width="949" Height="456" Margin="0,0,100,45" 
             HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Background="{x:Null}" Grid.RowSpan="2">
             Hello, Sir. Have a nice day!
         </ListView>
         <Button x:Name="ButtonWorkers" Background="#4CE3F9FF" 
-                Width="250" Height="30" Margin="32,175,0,0"
+                Width="168" Height="30" Margin="32,175,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                Click="ShowWorkers" Content="Workers" Grid.ColumnSpan="2" FontFamily="Yu Gothic"/>
+                Click="ShowTable" Tag="workers" Content="Workers" Grid.ColumnSpan="2" FontFamily="Yu Gothic"/>
+
         <TextBox Name="SearchBar" 
                  Width="726" Height="40" Margin="446,38,0,0"
                  HorizontalAlignment="Left" VerticalAlignment="Top" Padding="16,5,16,0"
@@ -48,17 +50,31 @@
         <Button Name="SearchBtn" Margin="1192,38,141,263" Padding="30,5" Click="SearchAction" Grid.ColumnSpan="2">
             Search
         </Button>
-        <Button Grid.ColumnSpan="2" Margin="78,177,1243,143" Grid.Row="1">
-            Add
-        </Button>
-        <Button Grid.ColumnSpan="2" Margin="78,232,1243,88" Grid.Row="1" RenderTransformOrigin="0.19,0.901" 
-                 Click="RenderReport">
-            Render report
-        </Button>
-        <Button Grid.ColumnSpan="2" Margin="78,287,1243,33" Grid.Row="1" RenderTransformOrigin="0.19,0.901" 
-                 Click="RecoverDB">
+
+        <Button  Background="#4CE3F9FF"
+                 Click="RecoverDB" Grid.ColumnSpan="2" Margin="32,330,1230,10" Grid.Row="1">
             Recover database
         </Button>
         <TextBox Name="FlashMsg" Height="100" Width="200"></TextBox>
+        <Button Background="#4CE3F9FF" 
+            Width="36" Height="30" Margin="205,140,0,0"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Click="AddEntity" Tag="items"  Grid.ColumnSpan="2" FontFamily="Yu Gothic" Content="Add"/>
+        <Button Background="#4CE3F9FF" 
+            Width="36" Height="30" Margin="205,175,0,0"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Click="AddEntity" Tag="workers"  Grid.ColumnSpan="2" FontFamily="Yu Gothic" Content="Add"/>
+        <Button Background="#4CE3F9FF" 
+            Width="36" Height="30" Margin="205,210,0,0"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Click="AddEntity" Tag="orders"  Grid.ColumnSpan="2" FontFamily="Yu Gothic" Content="Add"/>
+
+        <Button Background="#4CE3F9FF" Grid.ColumnSpan="2" Margin="246,141,1189,171" RenderTransformOrigin="0.19,0.901" 
+            Click="RenderReport" Tag="items" Content="CSV"/>
+        <Button Background="#4CE3F9FF" Grid.ColumnSpan="2" Margin="246,175,1189,136" RenderTransformOrigin="0.19,0.901" 
+            Click="RenderReport" Tag="workers"  Content="CSV"/>
+        <Button Background="#4CE3F9FF" Grid.ColumnSpan="2" Margin="246,210,1189,101" RenderTransformOrigin="0.19,0.901" 
+            Click="RenderReport" Tag="orders" Content="CSV"/>
+
     </Grid>
 </Window>
