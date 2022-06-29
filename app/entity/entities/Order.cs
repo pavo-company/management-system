@@ -24,6 +24,15 @@ namespace management_system
             Date = DateTime.Today;
             IsCyclic = isCyclic;
         }
+        public Order(int supplierId, int itemId, int amount, DateTime date, bool isCyclic)
+        {
+            Id = -1;
+            SupplierId = supplierId;
+            ItemId = itemId;
+            Amount = amount;
+            Date = date;
+            IsCyclic = isCyclic;
+        }
         public Order(int id, int supplierId, int itemId, int amount, DateTime date, bool isCyclic)
         {
             Id = id;

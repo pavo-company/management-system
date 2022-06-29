@@ -1,4 +1,7 @@
 ﻿using management_system.app.entity;
+using management_system.app.views.entity.item;
+using management_system.app.views.entity.order;
+using management_system.app.views.entity.worker;
 using System;
 using System.Data.SQLite;
 using System.IO;
@@ -142,7 +145,7 @@ namespace management_system
             File.Delete("../../../data/database.sqlite");
             File.Copy("../../../data/backup.sqlite", "../../../data/database.sqlite");
 
-            var tooltip = new ToolTip { Content = "Report generated" };
+            var tooltip = new ToolTip { Content = "Database recovered" };
             FlashMsg.ToolTip = tooltip;
 
             tooltip.IsOpen = true;
@@ -151,8 +154,29 @@ namespace management_system
 
         public void AddEntity(object sender, RoutedEventArgs e)
         {
-            MainWindow win2 = new MainWindow();
-            win2.Show();
+            var button = sender as Button;
+            currPage = button.Tag.ToString();
+
+            Window page = new AddItem();
+            switch (currPage)
+            {
+                case "items":
+                    page = new AddItem();
+                    break;
+
+                case "orders":
+                    page = new AddOrder();
+                    break;
+
+                case "workers":
+                    page = new AddWorker();
+                    break;
+
+                default:
+                    break;
+            }
+
+            page.Show();
         }
     }
 }

@@ -63,11 +63,11 @@
         <Button Background="#4CE3F9FF" 
             Width="36" Height="30" Margin="205,175,0,0"
             HorizontalAlignment="Left" VerticalAlignment="Top"
-            Click="AddEntity" Tag="items"  Grid.ColumnSpan="2" FontFamily="Yu Gothic" Content="Add"/>
+            Click="AddEntity" Tag="workers"  Grid.ColumnSpan="2" FontFamily="Yu Gothic" Content="Add"/>
         <Button Background="#4CE3F9FF" 
             Width="36" Height="30" Margin="205,210,0,0"
             HorizontalAlignment="Left" VerticalAlignment="Top"
-            Click="AddEntity" Tag="items"  Grid.ColumnSpan="2" FontFamily="Yu Gothic" Content="Add"/>
+            Click="AddEntity" Tag="orders"  Grid.ColumnSpan="2" FontFamily="Yu Gothic" Content="Add"/>
 
         <Button Background="#4CE3F9FF" Grid.ColumnSpan="2" Margin="246,141,1189,171" RenderTransformOrigin="0.19,0.901" 
             Click="RenderReport" Tag="items" Content="CSV"/>

@@ -1,0 +1,38 @@
+﻿<Window x:Class="management_system.app.views.entity.order.AddOrder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Add Order" Height="400" Width="350">
+    <Grid Height="400" Width="350">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="341*"/>
+            <RowDefinition Height="370*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Image HorizontalAlignment="Center" Height="102" VerticalAlignment="Top" Width="226" Source="/src/img/logo/dark_logo_transparent_background.png" Grid.Column="1"/>
+        <Rectangle HorizontalAlignment="Center" Height="87" VerticalAlignment="Top" Width="350" Fill="#194988EC" Grid.Column="1"/>
+        <Label Content="Supplier" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top" Height="27" Width="64"/>
+        <Label Content="Item" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10,136,0,0" VerticalAlignment="Top" Height="27" Width="64"/>
+        <Label Content="Amount" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10,168,0,0" VerticalAlignment="Top" Height="27" Width="64" Grid.RowSpan="2"/>
+        <Label Content="Date" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Height="27" Width="64" Grid.Row="1"/>
+        <Button x:Name="ButtonOrders" Background="#4CE3F9FF" 
+            Width="290" Height="52"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            Click="Add" FontFamily="Yu Gothic" Content="Add" Grid.Row="1" Grid.Column="1"/>
+        <TextBox Name="SupplierID"  Background="#4CE3F9FF" FontFamily="Yu Gothic" HorizontalAlignment="Left" Margin="96,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="226" Grid.Column="1" Height="30" VerticalContentAlignment="Center"/>
+        <TextBox Name="Amount" PreviewTextInput="NumberValidationTextBox" Background="#4CE3F9FF" FontFamily="Yu Gothic" HorizontalAlignment="Left" Margin="96,168,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="226" Grid.Column="1" Height="30" VerticalContentAlignment="Center" Grid.RowSpan="2"/>
+        <Label Name="Notification" Content="" HorizontalAlignment="Center" Margin="0,135,0,0" VerticalAlignment="Top" Height="27" Width="350" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Label Content="Is cyclic" FontFamily="Yu Gothic"  Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Height="27" Width="64" Grid.Row="1"/>
+        <RadioButton Name="IsCyclic" Content="" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="96,46,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <DatePicker Name="Date" Background="#4CE3F9FF" FontFamily="Yu Gothic" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="30" Margin="96,11,0,0" Grid.Row="1" VerticalAlignment="Top" Width="226"/>
+        <ComboBox  Name="Suppliers" FontFamily="Yu Gothic" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="30" Margin="96,104,0,0" VerticalAlignment="Top" Width="226" BorderBrush="{x:Null}"/>
+        <ComboBox Name="Items" FontFamily="Yu Gothic" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="30" Margin="96,136,0,0" VerticalAlignment="Top" Width="226" BorderBrush="{x:Null}"/>
+        
+    </Grid>
+</Window>
+
