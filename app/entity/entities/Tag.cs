@@ -9,6 +9,8 @@ namespace management_system
         public int Id { get; }
         public string Name { get; set; }
         public int ItemId { get; set; }
+        public int GetId() => Id;
+        public string DatabaseTableName() => "tags";
         public string[] DatabaseColumnNames() => new string[] { "name", "item_id" };
         public string[] DatabaseColumnValues() => new string[] { $"'{Name}'", $"'{ItemId}'" };
 
@@ -26,7 +28,5 @@ namespace management_system
             ItemId = itemId;
         }
 
-        public void AddToDatabase(Database db) => db.em.AddTag(this);
-        public void UpdateDatabase(Database db) => db.em.UpdateTag(this);
     }
 }

@@ -35,12 +35,8 @@ namespace management_system.app.views.entity.worker
             Database db = new Database();
             db.Open();
             Worker worker = new Worker(Name.Text, Surname.Text, Tin.Text, Convert.ToInt32(Salary.Text));
-            if (!db.em.AddWorker(worker))
-            {
-                Notification.Content = "Error";
-                db.Close();
-                return;
-            };
+            db.em.Add(worker);
+            db.em.flush();
             db.Close();
 
             Name.Text = Surname.Text = Salary.Text = Tin.Text = "";

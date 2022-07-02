@@ -12,6 +12,8 @@ namespace management_system
         public int UserId { get; set; }
         public int Amount { get; set; }
 
+        public int GetId() => Id;
+        public string DatabaseTableName() => "extractions";
         public string[] DatabaseColumnNames() => new string[] { "worker_id", "item_id", "amount", "user_id" };
         public string[] DatabaseColumnValues() => new string[] { $"{WorkerId}", $"{ItemId}", $"{Amount}", $"{UserId}" };
 
@@ -34,8 +36,6 @@ namespace management_system
             Amount = amount;
         }
 
-        public void AddToDatabase(Database db) => db.em.AddExtraction(this);
-        public void UpdateDatabase(Database db) => db.em.UpdateExtraction(this);
 
     }
 }

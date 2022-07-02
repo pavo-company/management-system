@@ -12,8 +12,10 @@ namespace management_system
         public int Amount { get; set; }
         public DateTime Date { get; set; }
         public bool IsCyclic { get; set; }
+        public int GetId() => Id;
+        public string DatabaseTableName() => "orders";
         public string[] DatabaseColumnNames() => new string[] { "supplier_id", "item_id", "amount", "date", "is_cyclic" };
-        public string[] DatabaseColumnValues() => new string[] { $"'{SupplierId}'", $"{ItemId}", $"{Amount}", Date.ToString(), $"{IsCyclic}" };
+        public string[] DatabaseColumnValues() => new string[] { $"{SupplierId}", $"{ItemId}", $"{Amount}", $"'{Date.ToString("MM/dd/yyyy")}'", $"{Convert.ToInt16(IsCyclic)}" };
 
         public Order(int supplierId, int itemId, int amount, bool isCyclic)
         {
@@ -73,7 +75,5 @@ namespace management_system
             
             db.Close();
         }
-        public void AddToDatabase(Database db) => db.em.AddOrder(this);
-        public void UpdateDatabase(Database db) => db.em.UpdateOrder(this);
     }
 }

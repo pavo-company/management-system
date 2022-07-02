@@ -6,6 +6,8 @@ namespace management_system
 {
     public class User : Person, Entity
     {
+        public int GetId() => Id;
+        public string DatabaseTableName() => "users";
         public string[] DatabaseColumnNames() => new string[] { "name", "surname", "tin" };
         public string[] DatabaseColumnValues() => new string[] { $"'{Name}'", $"'{Surname}'", $"'{Tin}'" };
 
@@ -26,8 +28,6 @@ namespace management_system
 
         public override string ToString() => $"User:\tName: {Name}\tTin: {Tin}";
 
-        public void AddToDatabase(Database db) => db.em.AddUser(this);
-        public void UpdateDatabase(Database db) => db.em.UpdateUser(this);
 
     }
 }

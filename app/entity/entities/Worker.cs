@@ -7,6 +7,8 @@ namespace management_system
     public class Worker : Person, Entity
     {
         public int Salary { get; init; }
+        public int GetId() => Id;
+        public string DatabaseTableName() => "workers";
         public string[] DatabaseColumnNames() => new string[] { "name", "surname", "salary", "tin" };
         public string[] DatabaseColumnValues() => new string[] { $"'{Name}'", $"'{Surname}'", $"{Salary}", $"'{Tin}'" };
 
@@ -29,8 +31,6 @@ namespace management_system
         
         public override string ToString() => $"Name: {Name}Surname: {Surname}\tTin: {Tin}\tSalary: {Salary}";
 
-        public void AddToDatabase(Database db) => db.em.AddWorker(this);
-        public void UpdateDatabase(Database db) => db.em.UpdateWorker(this);
 
     }
 }

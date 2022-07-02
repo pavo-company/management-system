@@ -35,12 +35,8 @@ namespace management_system.app.views.entity.order
             Database db = new Database();
             db.Open();
             Order order = new Order(Suppliers.SelectedIndex, Items.SelectedIndex, Convert.ToInt32(Amount.Text), (DateTime)Date.SelectedDate, (bool)IsCyclic.IsChecked);
-            if (!db.em.AddOrder(order))
-            {
-                Notification.Content = "Error";
-                db.Close();
-                return;
-            };
+            db.em.Add(order);
+            db.em.flush();
             db.Close();
 
             Amount.Text = "";

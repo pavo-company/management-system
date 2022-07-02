@@ -36,12 +36,8 @@ namespace management_system.app.views.entity.item
             Database db = new Database();
             db.Open();
             Item item = new Item(Name.Text, Convert.ToInt32(Amount.Text), Convert.ToInt32(Minimum.Text), Convert.ToInt32(Price.Text));
-            if (!db.em.AddItem(item))
-            {
-                Notification.Content = "Error";
-                db.Close();
-                return;
-            };
+            db.em.Add(item);
+            db.em.flush();
             db.Close();
 
             Name.Text = Amount.Text = Minimum.Text = Price.Text = "";

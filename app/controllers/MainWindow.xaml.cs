@@ -24,6 +24,9 @@ namespace management_system
         {
             InitializeComponent();
             this.WindowState = WindowState.Maximized;
+
+            Database db = new Database();
+            db.Open();
         }
 
         public void ShowResults(object sender, RoutedEventArgs e, SQLiteDataReader dataReader)

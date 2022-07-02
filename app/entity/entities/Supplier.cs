@@ -17,10 +17,9 @@ namespace management_system
             Name = name;
             Tin = tin;
         }
+        public int GetId() => Id;
+        public string DatabaseTableName() => "suppliers";
         public string[] DatabaseColumnNames() => new string[] { "name", "tin" };
         public string[] DatabaseColumnValues() => new string[] { $"'{Name}'", $"'{Tin}'" };
-
-        public void AddToDatabase(Database db) => db.em.AddSupplier(this);
-        public void UpdateDatabase(Database db) => db.em.UpdateSupplier(this);
     }
 }

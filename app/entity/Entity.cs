@@ -9,10 +9,9 @@ namespace management_system.app.entity
 {
     public interface Entity
     {
+        public int GetId();
+        public string DatabaseTableName();
         public string[] DatabaseColumnNames();
         public string[] DatabaseColumnValues();
-        public void UpdateDatabase(Database db);
-        public void AddToDatabase(Database db);
-        
     }
 }
